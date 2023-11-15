@@ -28,7 +28,7 @@
             flags = {
               type = "app";
               program = toString (pkgs.writeShellScript "flags-program" ''
-                echo ${compileFlags} > compile_flags.txt 
+                echo ${compileFlags} | tr ' ' '\n' > compile_flags.txt 
               '');           
             };
 
