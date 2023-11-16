@@ -22,7 +22,7 @@
             libFlags = " -L${pkgs.gnustep.base.lib}/lib  -L${pkgs.gnustep.libobjc}/lib";
             optionalFlags = "-Wall -O2 -pthread -fPIC -fobjc-exceptions -fexceptions -Wunused-command-line-argument";
             compileFlags = mustFlags + " " + libFlags + " " + optionalFlags;
-            src = ./src;
+            src = ./Chime;
           in
           {          
             flags = {
