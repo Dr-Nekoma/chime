@@ -7,7 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		03E2E2452B0598B6008D2356 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E2E2442B0598B6008D2356 /* main.m */; };
+		03AFEB762B08609C00A6D3B0 /* VM.m in Sources */ = {isa = PBXBuildFile; fileRef = 03AFEB752B08609C00A6D3B0 /* VM.m */; };
+		03AFEB7A2B086DE700A6D3B0 /* Stack.m in Sources */ = {isa = PBXBuildFile; fileRef = 03AFEB792B086DE700A6D3B0 /* Stack.m */; };
+		03E2E2452B0598B6008D2356 /* Main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E2E2442B0598B6008D2356 /* Main.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXBuildRule section */
@@ -37,8 +39,14 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		030070242B05B510007B0BC1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		03AFEB742B085FC000A6D3B0 /* VM.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = VM.h; sourceTree = "<group>"; };
+		03AFEB752B08609C00A6D3B0 /* VM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VM.m; sourceTree = "<group>"; };
+		03AFEB772B08615D00A6D3B0 /* Opcode.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Opcode.h; sourceTree = "<group>"; };
+		03AFEB782B086D8400A6D3B0 /* Stack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Stack.h; sourceTree = "<group>"; };
+		03AFEB792B086DE700A6D3B0 /* Stack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stack.m; sourceTree = "<group>"; };
 		03E2E2412B0598B6008D2356 /* Chime */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chime; sourceTree = BUILT_PRODUCTS_DIR; };
-		03E2E2442B0598B6008D2356 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		03E2E2442B0598B6008D2356 /* Main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Main.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -52,11 +60,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		030070232B05B510007B0BC1 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				030070242B05B510007B0BC1 /* Foundation.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		03E2E2382B0598B6008D2356 = {
 			isa = PBXGroup;
 			children = (
 				03E2E2432B0598B6008D2356 /* Chime */,
 				03E2E2422B0598B6008D2356 /* Products */,
+				030070232B05B510007B0BC1 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -71,7 +88,12 @@
 		03E2E2432B0598B6008D2356 /* Chime */ = {
 			isa = PBXGroup;
 			children = (
-				03E2E2442B0598B6008D2356 /* main.m */,
+				03E2E2442B0598B6008D2356 /* Main.m */,
+				03AFEB742B085FC000A6D3B0 /* VM.h */,
+				03AFEB752B08609C00A6D3B0 /* VM.m */,
+				03AFEB772B08615D00A6D3B0 /* Opcode.h */,
+				03AFEB782B086D8400A6D3B0 /* Stack.h */,
+				03AFEB792B086DE700A6D3B0 /* Stack.m */,
 			);
 			path = Chime;
 			sourceTree = "<group>";
@@ -134,7 +156,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				03E2E2452B0598B6008D2356 /* main.m in Sources */,
+				03AFEB7A2B086DE700A6D3B0 /* Stack.m in Sources */,
+				03AFEB762B08609C00A6D3B0 /* VM.m in Sources */,
+				03E2E2452B0598B6008D2356 /* Main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

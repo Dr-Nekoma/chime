@@ -6,11 +6,12 @@
 //
 
 #import <Foundation/Foundation.h>
+#import "VM.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        // insert code here...
-        NSLog(@"Hello, World!");
+        VM* vm = [VM new];
+        [vm Execute:@""];
     }
     return 0;
 }
