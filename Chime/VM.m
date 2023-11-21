@@ -32,19 +32,16 @@
 
 - (void)Evaluate {
     while(![_stack isEmpty]){
-        OPCODE opcode = [_stack pop];
-        switch (opcode) {
-            case OP_HALT:
-                NSLog(@"HALTING");
-                return;
-                break;
-            case OP_ADD:
-                NSLog(@"ADD");
-                break;
-            default:
-                NSLog(@"DEFAULT");
-                return;
-                break;
+        id opcode = [_stack pop];
+        if ([opcode isEqualTo:@(OP_HALT)]){
+            NSLog(@"HALTING");
+            return;
+        }else if ([opcode isEqualTo:@(OP_ADD)]){
+            NSLog(@"ADDING");
+            return;
+        } else {
+            NSLog(@"DEFAULT");
+            return;
         }
     }
 }

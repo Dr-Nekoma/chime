@@ -8,7 +8,7 @@
 #ifndef Opcode_h
 #define Opcode_h
 
-typedef enum : int64_t {
+typedef enum : NSUInteger {
     OP_HALT,
     OP_ADD
 } OPCODE;

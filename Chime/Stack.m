@@ -26,21 +26,20 @@
     return;
 }
 
-- (OPCODE)pop{
+- (id)pop{
     if(_size == 0)
         @throw [NSException exceptionWithName:@"Stack Underflow" reason:@"Stack is empty, cannot pop." userInfo:nil];
-    OPCODE opcode = (OPCODE)_arr[_size - 1];
+    id opcode = _arr[_size - 1];
     _size--;
-    //(OPCODE)[_arr objectAtIndex:(--_size)];
     [_arr removeLastObject];
     return opcode;
 }
 
-- (OPCODE)peek{
+- (id)peek{
     if(_size == 0)
         @throw [NSException exceptionWithName:@"Stack Underflow" reason:@"Stack is empty, cannot pop." userInfo:nil];
     
-    return (OPCODE)[_arr objectAtIndex:(_size - 1)];
+    return [_arr objectAtIndex:(_size - 1)];
     
 }
 
