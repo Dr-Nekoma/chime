@@ -18,7 +18,7 @@
 
 - (Stack*)init;
 - (bool)isEmpty;
-- (void)push:(OPCODE)opcode;
+- (void)push:(id)elem;
 - (id)pop;
 - (id)peek;
 
