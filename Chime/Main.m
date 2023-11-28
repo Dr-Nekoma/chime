@@ -10,8 +10,8 @@
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
-        VM* vm = [VM new];
-        [vm Execute:@""];
+      VM* vm = [VM new];
+      [vm Execute:@""];
     }
     return 0;
 }

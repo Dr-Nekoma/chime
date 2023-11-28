@@ -13,7 +13,9 @@
 
 @interface VM : NSObject
 
-@property Stack* stack;
+@property Stack* dataStack;
+@property Stack* returnStack;
+@property NSMapTable* registers;
 
 - (VM*)init;
 

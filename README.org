@@ -1,3 +1,16 @@
-#+TITLE: Chime
+#+TITLE: Chime 🔔
 
-A runtime at your service. 🔔
+A runtime at your service.
+
+* Features
+
+- [ ] Stack manipulations
+- [ ] Flow control
+- [ ] Arithmetic and Logic
+- [ ] Address Management
+- [ ] Neutral instructions
+- [ ] Function calls and closures
+
+* References
+
+- http://fpgacpu.ca/publications/Second-Generation_Stack_Computer_Architecture.pdf

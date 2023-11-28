@@ -10,7 +10,13 @@
 
 typedef enum : NSUInteger {
     OP_HALT,
-    OP_ADD
+    OP_PUSH_A,
+    OP_POP_A,
+    OP_PUSH_R,
+    OP_POP_R,
+    OP_OVER,
+    OP_DUP,
+    OP_DROP
 } OPCODE;
 
 

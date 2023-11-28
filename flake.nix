@@ -36,7 +36,8 @@
               type = "app";
               program = toString (pkgs.writeShellScript "execute-program" ''
                 output=$(${mktemp})
-                ${clang} ${compileFlags} -o $output ${src}/main.m && $output
+                mfiles=$(find ${src} -type f -name "*.m")
+                ${clang} ${compileFlags} -I${src}/include $mfiles ${src}/Main.m -o $output
              '');
             };       
           });        
