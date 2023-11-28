@@ -29,7 +29,7 @@
 - (id)pop{
     if(_size == 0)
         @throw [NSException exceptionWithName:@"Stack Underflow" reason:@"Stack is empty, cannot pop." userInfo:nil];
-    id elem = _arr[_size - 1];
+    id elem = [_arr objectAtIndex:(_size - 1)];
     _size--;
     [_arr removeLastObject];
     return elem;
