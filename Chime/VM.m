@@ -16,13 +16,14 @@
         _dataStack = [Stack new];
         _returnStack = [Stack new];
         _registers = [[NSMapTable alloc] init];
-        //[_registers setObject:0 forKey:@"A"];
     }
     return self;
 }
 
 - (void)clearCode {
     _dataStack = [Stack new];
+    _returnStack = [Stack new];
+    _registers = [[NSMapTable alloc] init];
 }
 
 - (void)Execute:(NSString *)program {
@@ -75,7 +76,7 @@
             } @catch (NSException *exception) {
                 @throw exception;
             }
-        } else if ([opcode isEqualTo:@(OP_DROP)]){
+        }else if ([opcode isEqualTo:@(OP_DROP)]){
             NSLog(@"DROP");
             @try {
                 [_dataStack pop];
