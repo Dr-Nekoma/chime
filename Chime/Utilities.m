@@ -24,6 +24,5 @@ uint32_t packWord(OPCODE* opcodes){
         word |= opcodes[i];
     }
     word = word << 2;
-    NSLog(@"WORD: %i", word);
     return word;
 }

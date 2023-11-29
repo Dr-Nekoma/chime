@@ -50,10 +50,9 @@
         }else{
             opcode = @(OP_PC_FETCH);
         }
-        //id opcode = [_dataStack pop];
         if ([opcode isEqualTo:@(OP_HALT)]){
             NSLog(@"HALTING");
-            //return;
+            return;
         }else if ([opcode isEqualTo:@(OP_PUSH_A)]){
             NSLog(@"PUSHING TO A");
             if (findInEnumerator([_registers keyEnumerator], @"A")){
@@ -128,7 +127,7 @@
     }else if ([opcode isEqualTo:@(OP_JUMP)]){
         NSLog(@"JUMPING");
 	    if (findInEnumerator([_registers keyEnumerator], @"PC")){
-            NSUInteger valueOfPC = (NSUInteger)[_registers objectForKey:@"PC"];
+            NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
             [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC] forKey:@"PC"];
         }else{
             @throw [NSException exceptionWithName:@"Stack Underflow" reason:@"Attempting to read value to undefined 'PC' register" userInfo:nil];
@@ -138,7 +137,7 @@
 	    if (findInEnumerator([_registers keyEnumerator], @"PC")){
             @try {
                 id poppedValue = [_dataStack pop];
-                NSInteger valueOfPC = (NSInteger)[_registers objectForKey:@"PC"];
+                NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
                 if([poppedValue isEqualTo:@0]){
                     [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC] forKey:@"PC"];
                 } else {
@@ -155,7 +154,7 @@
 	    if (findInEnumerator([_registers keyEnumerator], @"PC")){
             @try {
                 id poppedValue = [_dataStack pop];
-                NSUInteger valueOfPC = (NSUInteger)[_registers objectForKey:@"PC"];
+                NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
                 if([poppedValue isGreaterThan:@0]){
                     [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC] forKey:@"PC"];
                 } else {
@@ -170,7 +169,7 @@
     }else if ([opcode isEqualTo:@(OP_CALL)]){
         NSLog(@"CALLING");
 	    if (findInEnumerator([_registers keyEnumerator], @"PC")){
-            NSUInteger valueOfPC = (NSUInteger)[_registers objectForKey:@"PC"];
+            NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
             [_returnStack push:@(valueOfPC)];
             [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC] forKey:@"PC"];
         }else{
