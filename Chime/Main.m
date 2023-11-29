@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "VM.h"
+#import "Headers/VM.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {

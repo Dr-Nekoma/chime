@@ -1,10 +1,3 @@
-//
-//  Stack.h
-//  Chime
-//
-//  Created by Marcos Magueta on 18/11/23.
-//
-
 #ifndef Stack_h
 #define Stack_h
 

@@ -1,3 +1,4 @@
 *.d
 .devenv
 *.out
+*.DS_Store

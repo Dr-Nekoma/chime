@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 
-#import "Stack.h"
+#import "Headers/Stack.h"
 
 @implementation Stack
 
