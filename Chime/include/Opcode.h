@@ -9,6 +9,7 @@
 #define Opcode_h
 
 typedef enum : NSUInteger {
+    // Stack Manipulations
     OP_HALT,
     OP_PUSH_A,
     OP_POP_A,
@@ -16,8 +17,16 @@ typedef enum : NSUInteger {
     OP_POP_R,
     OP_OVER,
     OP_DUP,
-    OP_DROP
+    OP_DROP,
+    // Flow Control
+    OP_PC_FETCH,
+    OP_JUMP,
+    OP_JUMP_ZERO,
+    OP_JUMP_PLUS,
+    OP_CALL,
+    OP_RET
 } OPCODE;
+
 
 
 #endif /* Opcode_h */
