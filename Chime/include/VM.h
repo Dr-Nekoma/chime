@@ -16,6 +16,7 @@
 @property Stack* dataStack;
 @property Stack* returnStack;
 @property NSMapTable* registers;
+@property NSMutableArray* memoryRAM;
 
 - (VM*)init;
 
