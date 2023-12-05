@@ -1,22 +1,15 @@
-//
-//  Stack.h
-//  Chime
-//
-//  Created by Marcos Magueta on 18/11/23.
-//
-
 #ifndef Stack_h
 #define Stack_h
 
-#import <Foundation/Foundation.h>
 #import "Opcode.h"
+#import <Foundation/Foundation.h>
 
 @interface Stack : NSObject
 
 @property NSUInteger size;
-@property NSMutableArray* arr;
+@property NSMutableArray *arr;
 
-- (Stack*)init;
+- (Stack *)init;
 - (bool)isEmpty;
 - (void)push:(id)elem;
 - (id)pop;
