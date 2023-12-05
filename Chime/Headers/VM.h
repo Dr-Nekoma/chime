@@ -8,21 +8,21 @@
 #ifndef VM_h
 #define VM_h
 
-#import <Foundation/Foundation.h>
 #import "Stack.h"
+#import <Foundation/Foundation.h>
 
 @interface VM : NSObject
 
-@property Stack* dataStack;
-@property Stack* returnStack;
-@property NSMapTable* registers;
-@property NSMutableArray* memoryRAM;
+@property Stack *dataStack;
+@property Stack *returnStack;
+@property NSMapTable *registers;
+@property NSMutableArray *memoryRAM;
 
-- (VM*)init;
+- (VM *)init;
 
 - (void)clearCode;
 
-- (void)Execute:(NSString*) program;
+- (void)Execute:(NSString *)program;
 
 @end
 
