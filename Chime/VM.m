@@ -7,6 +7,7 @@
 
 #import "Headers/VM.h"
 #import "Headers/Utilities.h"
+#import "Headers/Instructions.h"
 
 #include <stdlib.h>
 
@@ -218,6 +219,28 @@
                                               @"undefined 'PC' register"
                                      userInfo:nil];
       }
+    } else if ([opcode isEqualTo:@(OP_FETCH)]) {
+        instruction_op_fetch(_registers, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_LOAD_A)]) {
+        instruction_op_load_a(_registers, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_STORE_A)]) {
+        instruction_op_store_a(_registers, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_AND)]) {
+        instruction_op_and(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_OR)]) {
+        instruction_op_or(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_NOT)]) {
+        instruction_op_not(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_XOR)]) {
+        instruction_op_xor(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_PLUS)]) {
+        instruction_op_plus(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_DOUBLE)]) {
+        instruction_op_double(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_HALF)]) {
+        instruction_op_half(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_PLUS_STAR)]) {
+        instruction_op_plus_star(_dataStack);
     } else {
       NSLog(@"DEFAULT");
       return;
