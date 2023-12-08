@@ -1,11 +1,25 @@
 #+title: Chime Instruction Set
 
 * Memory
+
 ** load_a_plus
+
 Loads the value from the memory address in the A register, pushes it into the data stack, then increments the A register.
+
 ** store_a_plus
+
 Pops the data stack, writing the value to the memory address in the A register, then increments the A register.
+
 ** load_r_plus
+
 Loads the value from the memory address in the top of the return stack, pushes it into the data stack, then increments the top of the return stack.
+
 ** store_r_plus
+
 Pops the data stack, writing the value to the memory address in the top of the return stack, then increments the top of the return stack.
+
+* Other
+
+** nop
+
+Does nothing.
