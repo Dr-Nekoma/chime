@@ -67,7 +67,7 @@
       uint32_t opcodes =
           from64To32([[_registers objectForKey:@"ISR"] integerValue]);
       // This is a mask to remove the ending 2 bits of any number
-      opcodes &= -8;
+      opcodes &= -4;
       opcode = @(opcodes >> 27);
       opcodes = opcodes << 5;
       [_registers setObject:@(opcodes) forKey:@"ISR"];
