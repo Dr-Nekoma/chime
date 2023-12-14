@@ -23,6 +23,10 @@ typedef enum : uint64_t {
   // Memory Access
   OP_LOAD_A,
   OP_STORE_A,
+  OP_LOAD_A_PLUS,
+  OP_STORE_A_PLUS,
+  OP_LOAD_R_PLUS,
+  OP_STORE_R_PLUS,
   OP_FETCH,
   // Arithmetic
   OP_AND,
@@ -32,7 +36,9 @@ typedef enum : uint64_t {
   OP_PLUS,
   OP_DOUBLE,
   OP_HALF,
-  OP_PLUS_STAR
+  OP_PLUS_STAR,
+  // Other
+  OP_NOP
 } OPCODE;
 
 #endif /* Opcode_h */

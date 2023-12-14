@@ -1,10 +1,3 @@
-//
-//  VM.h
-//  Chime
-//
-//  Created by Marcos Magueta on 17/11/23.
-//
-
 #ifndef VM_h
 #define VM_h
 
@@ -15,6 +8,7 @@
 
 @property Stack *dataStack;
 @property Stack *returnStack;
+@property Stack *instructionStack;
 @property NSMapTable *registers;
 @property NSMutableArray *memoryRAM;
 

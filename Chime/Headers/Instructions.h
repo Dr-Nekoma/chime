@@ -13,3 +13,7 @@ void instruction_op_plus(Stack *_dataStack);
 void instruction_op_double(Stack *_dataStack);
 void instruction_op_half(Stack *_dataStack);
 void instruction_op_plus_star(Stack *_dataStack);
+void instruction_op_load_a_plus(NSMapTable* _registers, Stack* _dataStack, NSMutableArray* _ram);
+void instruction_op_store_a_plus(NSMapTable* _registers, Stack* _dataStack, NSMutableArray* _ram);
+void instruction_op_load_r_plus(Stack* _returnStack, Stack* _dataStack, NSMutableArray* _ram);
+void instruction_op_store_r_plus(Stack* _returnStack, Stack* _dataStack, NSMutableArray* _ram);

@@ -32,8 +32,30 @@
 }
 
 - (void)Execute:(NSString *)program {
-  OPCODE opcodes[6] = {OP_HALT, OP_HALT, OP_HALT, OP_HALT, OP_HALT, OP_HALT};
-  [_memoryRAM addObject:@(packWord(opcodes))];
+/*
+ [[call halt pc_fetch]
+  3
+  [add ret pc_fetch]
+  [fetch fetch fetch call jump pc_fetch]
+  3
+  4
+  5
+  2
+  2
+ ]
+*/
+  OPCODE word0[6] = {OP_CALL, OP_HALT, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
+  OPCODE word2[6] = {OP_PLUS, OP_RET, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
+  OPCODE word3[6] = {OP_FETCH, OP_FETCH, OP_FETCH, OP_CALL, OP_JUMP, OP_PC_FETCH};
+  [_memoryRAM addObject:@(packWord(word0))];
+  [_memoryRAM addObject:@3];
+  [_memoryRAM addObject:@(packWord(word2))];
+  [_memoryRAM addObject:@(packWord(word3))];
+  [_memoryRAM addObject:@3];
+  [_memoryRAM addObject:@4];
+  [_memoryRAM addObject:@5];
+  [_memoryRAM addObject:@2];
+  [_memoryRAM addObject:@2];
   [_registers setObject:@0 forKey:@"PC"];
   return [self Evaluate];
 }
@@ -54,6 +76,7 @@
     }
     if ([opcode isEqualTo:@(OP_HALT)]) {
       NSLog(@"HALTING");
+      NSLog(@"%lu", [[_dataStack peek] integerValue]);
       return;
     } else if ([opcode isEqualTo:@(OP_PUSH_A)]) {
       NSLog(@"PUSHING TO A");
@@ -79,14 +102,16 @@
       NSLog(@"PUSHING TO R");
       @try {
         id valueOfR = [_dataStack pop];
+        [_instructionStack push:@0];
         [_returnStack push:valueOfR];
       } @catch (NSException *exception) {
         @throw exception;
       }
     } else if ([opcode isEqualTo:@(OP_POP_R)]) {
-      NSLog(@"POP TO R");
+      NSLog(@"POP R");
       @try {
         id valueOfR = [_returnStack pop];
+        [_instructionStack pop];
         [_dataStack push:valueOfR];
       } @catch (NSException *exception) {
         @throw exception;
@@ -196,6 +221,7 @@
       if (findInEnumerator([_registers keyEnumerator], @"PC")) {
         NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
         [_returnStack push:@(valueOfPC)];
+        [_instructionStack push:[_registers objectForKey:@"ISR"]];
         [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
                        forKey:@"PC"];
       } else {
@@ -209,6 +235,7 @@
       if (findInEnumerator([_registers keyEnumerator], @"PC")) {
         @try {
           id poppedValue = [_returnStack pop];
+          [_registers setObject:[_instructionStack pop] forKey:@"ISR"];
           [_registers setObject:poppedValue forKey:@"PC"];
         } @catch (NSException *exception) {
           @throw exception;
@@ -241,6 +268,16 @@
         instruction_op_half(_dataStack);
     } else if ([opcode isEqualTo:@(OP_PLUS_STAR)]) {
         instruction_op_plus_star(_dataStack);
+    } else if ([opcode isEqualTo:@(OP_LOAD_A_PLUS)]) {
+        instruction_op_load_a_plus(_registers, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_STORE_A_PLUS)]) {
+        instruction_op_store_a_plus(_registers, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_LOAD_R_PLUS)]) {
+        instruction_op_load_r_plus(_returnStack, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_STORE_R_PLUS)]) {
+        instruction_op_store_r_plus(_returnStack, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_NOP)]) {
+        NSLog(@"NOP");
     } else {
       NSLog(@"DEFAULT");
       return;

@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		0356D9A02B0D883C00E65C6B /* Utilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 0356D99F2B0D883C00E65C6B /* Utilities.m */; };
+		03646C642B2A7A6C00119926 /* Instructions.m in Sources */ = {isa = PBXBuildFile; fileRef = 03646C632B2A7A6C00119926 /* Instructions.m */; };
 		03AFEB762B08609C00A6D3B0 /* VM.m in Sources */ = {isa = PBXBuildFile; fileRef = 03AFEB752B08609C00A6D3B0 /* VM.m */; };
 		03AFEB7A2B086DE700A6D3B0 /* Stack.m in Sources */ = {isa = PBXBuildFile; fileRef = 03AFEB792B086DE700A6D3B0 /* Stack.m */; };
 		03E2E2452B0598B6008D2356 /* Main.m in Sources */ = {isa = PBXBuildFile; fileRef = 03E2E2442B0598B6008D2356 /* Main.m */; };
@@ -43,6 +44,7 @@
 		030070242B05B510007B0BC1 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		031E865A2B16C39D003013CB /* Headers */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Headers; sourceTree = "<group>"; };
 		0356D99F2B0D883C00E65C6B /* Utilities.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Utilities.m; sourceTree = "<group>"; };
+		03646C632B2A7A6C00119926 /* Instructions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Instructions.m; sourceTree = "<group>"; };
 		03AFEB752B08609C00A6D3B0 /* VM.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = VM.m; sourceTree = "<group>"; };
 		03AFEB792B086DE700A6D3B0 /* Stack.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Stack.m; sourceTree = "<group>"; };
 		03E2E2412B0598B6008D2356 /* Chime */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Chime; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -90,6 +92,7 @@
 			children = (
 				031E865A2B16C39D003013CB /* Headers */,
 				03E2E2442B0598B6008D2356 /* Main.m */,
+				03646C632B2A7A6C00119926 /* Instructions.m */,
 				03AFEB752B08609C00A6D3B0 /* VM.m */,
 				03AFEB792B086DE700A6D3B0 /* Stack.m */,
 				0356D99F2B0D883C00E65C6B /* Utilities.m */,
@@ -158,6 +161,7 @@
 				03AFEB7A2B086DE700A6D3B0 /* Stack.m in Sources */,
 				03AFEB762B08609C00A6D3B0 /* VM.m in Sources */,
 				0356D9A02B0D883C00E65C6B /* Utilities.m in Sources */,
+				03646C642B2A7A6C00119926 /* Instructions.m in Sources */,
 				03E2E2452B0598B6008D2356 /* Main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
