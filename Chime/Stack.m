@@ -20,6 +20,10 @@
   return self;
 }
 
+- (void)printStack {
+  NSLog(@"%@", _arr);
+}
+
 - (void)push:(id)elem {
   [_arr addObject:elem];
   _size++;

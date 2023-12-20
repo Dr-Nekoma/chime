@@ -14,6 +14,7 @@
 - (void)push:(id)elem;
 - (id)pop;
 - (id)peek;
+- (void)printStack;
 
 @end
 

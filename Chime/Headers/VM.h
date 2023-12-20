@@ -16,6 +16,8 @@
 
 - (void)clearCode;
 
+- (void)printState;
+
 - (void)Execute:(NSString *)program;
 
 @end
