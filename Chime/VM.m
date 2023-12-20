@@ -233,10 +233,12 @@
       NSLog(@"CALLING");
       if (findInEnumerator([_registers keyEnumerator], @"PC")) {
         NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
-        [_returnStack push:@(valueOfPC)];
+        [_returnStack push:@(valueOfPC + 1)];
         [_instructionStack push:[_registers objectForKey:@"ISR"]];
         [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
                        forKey:@"PC"];
+        [_registers setObject:@0
+                       forKey:@"ISR"];	
       } else {
         @throw [NSException exceptionWithName:@"Stack Underflow"
                                        reason:@"Attempting to read value to "
