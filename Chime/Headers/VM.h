@@ -6,11 +6,11 @@
 
 @interface VM : NSObject
 
-@property Stack *dataStack;
-@property Stack *returnStack;
-@property Stack *instructionStack;
-@property NSMapTable *registers;
-@property NSMutableArray *memoryRAM;
+@property (retain) Stack *dataStack;
+@property (retain) Stack *returnStack;
+@property (retain) Stack *instructionStack;
+@property (retain) NSMapTable *registers;
+@property (retain) NSMutableArray *memoryRAM;
 
 - (VM *)init;
 
