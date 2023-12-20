@@ -55,6 +55,7 @@
                       # Headers not found
                       clang-tools
                       clang
+                      just
                       # LSP std
                       # gnustep.gui
                       # gnustep.gorm
