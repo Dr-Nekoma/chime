@@ -2,6 +2,7 @@
 #define Utilities_h
 
 #include "Opcode.h"
+#import <Foundation/Foundation.h>
 
 bool findInEnumerator(NSEnumerator *, id);
 
