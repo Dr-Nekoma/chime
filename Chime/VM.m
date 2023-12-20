@@ -60,15 +60,15 @@
   OPCODE word0[6] = {OP_CALL, OP_HALT, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
   OPCODE word2[6] = {OP_PLUS, OP_RET, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
   OPCODE word3[6] = {OP_FETCH, OP_FETCH, OP_FETCH, OP_CALL, OP_JUMP, OP_PC_FETCH};
-  [_memoryRAM addObject:@(packWord(word0))];
-  [_memoryRAM addObject:@3];
-  [_memoryRAM addObject:@(packWord(word2))];
-  [_memoryRAM addObject:@(packWord(word3))];
-  [_memoryRAM addObject:@3];
-  [_memoryRAM addObject:@4];
-  [_memoryRAM addObject:@5];
-  [_memoryRAM addObject:@2];
-  [_memoryRAM addObject:@2];
+  [_memoryRAM addObject:@(packWord(word0))]; // 0
+  [_memoryRAM addObject:@3]; // 1
+  [_memoryRAM addObject:@(packWord(word2))]; // 2
+  [_memoryRAM addObject:@(packWord(word3))]; // 3
+  [_memoryRAM addObject:@3]; // 4
+  [_memoryRAM addObject:@4]; // 5
+  [_memoryRAM addObject:@5]; // 6
+  [_memoryRAM addObject:@2]; // 7
+  [_memoryRAM addObject:@2]; // 8
   [_registers setObject:@0 forKey:@"PC"];
   return [self Evaluate];
 }
