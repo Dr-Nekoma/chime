@@ -18,6 +18,7 @@
   if (self) {
     _dataStack = [Stack new];
     _returnStack = [Stack new];
+    _instructionStack = [Stack new];
     _registers = [[NSMapTable alloc] init];
     _memoryRAM = [[NSMutableArray alloc] init];
   }
