@@ -30,7 +30,8 @@ void instruction_op_and(Stack *_dataStack){
     return;
 }
 
-void instruction_op_or(Stack *_dataStack){ NSInteger value1 = [[_dataStack pop] integerValue];
+void instruction_op_or(Stack *_dataStack){ 
+      NSInteger value1 = [[_dataStack pop] integerValue];
     NSInteger value2 = [[_dataStack pop] integerValue];
     [_dataStack push:@(value1 | value2)];
     return;
