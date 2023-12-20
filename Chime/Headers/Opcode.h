@@ -27,7 +27,7 @@ typedef enum : uint64_t {
   OP_STORE_A_PLUS,
   OP_LOAD_R_PLUS,
   OP_STORE_R_PLUS,
-  OP_FETCH,
+  OP_LITERAL,
   // Arithmetic
   OP_AND,
   OP_NOT,

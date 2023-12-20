@@ -5,9 +5,8 @@
 //  Created by Marcos Magueta on 18/11/23.
 //
 
-#import "Headers/VM.h"
-#import "Headers/Utilities.h"
-#import "Headers/Instructions.h"
+#import "Headers/VM+Instructions.h"
+#import "Headers/Utilities.h">
 
 #include <stdlib.h>
 
@@ -59,7 +58,7 @@
 */
   OPCODE word0[6] = {OP_CALL, OP_HALT, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
   OPCODE word2[6] = {OP_PLUS, OP_RET, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
-  OPCODE word3[6] = {OP_FETCH, OP_FETCH, OP_FETCH, OP_CALL, OP_JUMP, OP_PC_FETCH};
+  OPCODE word3[6] = {OP_LITERAL, OP_LITERAL, OP_LITERAL, OP_CALL, OP_JUMP, OP_PC_FETCH};
   [_memoryRAM addObject:@(packWord(word0))]; // 0
   [_memoryRAM addObject:@3]; // 1
   [_memoryRAM addObject:@(packWord(word2))]; // 2
@@ -261,51 +260,51 @@
                                               @"undefined 'PC' register"
                                      userInfo:nil];
       }
-    } else if ([opcode isEqualTo:@(OP_FETCH)]) {
-      NSLog(@"FETCH");      
-      instruction_op_fetch(_registers, _dataStack, _memoryRAM);
+    } else if ([opcode isEqualTo:@(OP_LITERAL)]) {
+      NSLog(@"FETCH LITERAL");      
+      [self instructionOpLiteral];
     } else if ([opcode isEqualTo:@(OP_LOAD_A)]) {
       NSLog(@"LOAD A");
-      instruction_op_load_a(_registers, _dataStack, _memoryRAM);
+      [self instructionOpLoadA];
     } else if ([opcode isEqualTo:@(OP_STORE_A)]) {
       NSLog(@"STORE A");      
-      instruction_op_store_a(_registers, _dataStack, _memoryRAM);
+      [self instructionOpStoreA];
     } else if ([opcode isEqualTo:@(OP_AND)]) {
       NSLog(@"AND");      
-      instruction_op_and(_dataStack);
+      [self instructionOpAnd];
     } else if ([opcode isEqualTo:@(OP_OR)]) {
       NSLog(@"OR");
-      instruction_op_or(_dataStack);
+      [self instructionOpOr];
     } else if ([opcode isEqualTo:@(OP_NOT)]) {
       NSLog(@"NOT");      
-      instruction_op_not(_dataStack);
+      [self instructionOpNot];
     } else if ([opcode isEqualTo:@(OP_XOR)]) {
       NSLog(@"XOR");
-      instruction_op_xor(_dataStack);
+      [self instructionOpXor];
     } else if ([opcode isEqualTo:@(OP_PLUS)]) {
       NSLog(@"PLUS");
-      instruction_op_plus(_dataStack);
+      [self instructionOpPlus];
     } else if ([opcode isEqualTo:@(OP_DOUBLE)]) {
       NSLog(@"DOUBLE");
-      instruction_op_double(_dataStack);
+      [self instructionOpDouble];
     } else if ([opcode isEqualTo:@(OP_HALF)]) {
       NSLog(@"HALF");
-      instruction_op_half(_dataStack);
+      [self instructionOpHalf];
     } else if ([opcode isEqualTo:@(OP_PLUS_STAR)]) {
       NSLog(@"PLUS STAR");
-      instruction_op_plus_star(_dataStack);
+      [self instructionOpPlusStar];
     } else if ([opcode isEqualTo:@(OP_LOAD_A_PLUS)]) {
       NSLog(@"LOAD A PLUS");      
-      instruction_op_load_a_plus(_registers, _dataStack, _memoryRAM);
+      [self instructionOpLoadAPlus];
     } else if ([opcode isEqualTo:@(OP_STORE_A_PLUS)]) {
       NSLog(@"STORE A PLUS");      
-      instruction_op_store_a_plus(_registers, _dataStack, _memoryRAM);
+      [self instructionOpStoreAPlus];
     } else if ([opcode isEqualTo:@(OP_LOAD_R_PLUS)]) {
       NSLog(@"LOAD R PLUS");      
-      instruction_op_load_r_plus(_returnStack, _dataStack, _memoryRAM);
+      [self instructionOpLoadRPlus];
     } else if ([opcode isEqualTo:@(OP_STORE_R_PLUS)]) {
       NSLog(@"STORE R PLUS");      
-      instruction_op_store_r_plus(_returnStack, _dataStack, _memoryRAM);
+      [self instructionOpStoreRPlus];
     } else if ([opcode isEqualTo:@(OP_NOP)]) {
       NSLog(@"NOP");      
     } else {
