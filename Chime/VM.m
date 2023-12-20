@@ -6,7 +6,7 @@
 //
 
 #import "Headers/VM+Instructions.h"
-#import "Headers/Utilities.h">
+#import "Headers/Utilities.h"
 
 #include <stdlib.h>
 
@@ -97,174 +97,43 @@
       return;
     } else if ([opcode isEqualTo:@(OP_PUSH_A)]) {
       NSLog(@"PUSHING TO A");
-      if (findInEnumerator([_registers keyEnumerator], @"A")) {
-        id valueOfA = [_registers objectForKey:@"A"];
-        [_dataStack push:valueOfA];
-      } else {
-        @throw [NSException
-            exceptionWithName:@"Stack Underflow"
-                       reason:
-                           @"Attempting to push value to undefined 'A' register"
-                     userInfo:nil];
-      }
+      [self instructionOpPushA];
     } else if ([opcode isEqualTo:@(OP_POP_A)]) {
       NSLog(@"POP TO A");
-      @try {
-        id valueOfA = [_dataStack pop];
-        [_registers setObject:valueOfA forKey:@"A"];
-      } @catch (NSException *exception) {
-        @throw exception;
-      }
+      [self instructionOpPopA];
     } else if ([opcode isEqualTo:@(OP_PUSH_R)]) {
       NSLog(@"PUSHING TO R");
-      @try {
-        id valueOfR = [_dataStack pop];
-        [_instructionStack push:@0];
-        [_returnStack push:valueOfR];
-      } @catch (NSException *exception) {
-        @throw exception;
-      }
+      [self instructionOpPushR];
     } else if ([opcode isEqualTo:@(OP_POP_R)]) {
       NSLog(@"POP R");
-      @try {
-        id valueOfR = [_returnStack pop];
-        [_instructionStack pop];
-        [_dataStack push:valueOfR];
-      } @catch (NSException *exception) {
-        @throw exception;
-      }
+      [self instructionOpPopR];
     } else if ([opcode isEqualTo:@(OP_DUP)]) {
       NSLog(@"DUP");
-      @try {
-        [_dataStack push:[_dataStack peek]];
-      } @catch (NSException *exception) {
-        @throw exception;
-      }
+      [self instructionOpDup];
     } else if ([opcode isEqualTo:@(OP_DROP)]) {
       NSLog(@"DROP");
-      @try {
-        [_dataStack pop];
-      } @catch (NSException *exception) {
-        @throw exception;
-      }
+      [self instructionOpDrop];
     } else if ([opcode isEqualTo:@(OP_OVER)]) {
       NSLog(@"OVER");
-      @try {
-        id top = [_dataStack pop];
-        id second = [_dataStack peek];
-        [_dataStack push:top];
-        [_dataStack push:second];
-      } @catch (NSException *exception) {
-        @throw exception;
-      }
+      [self instructionOpOver];
     } else if ([opcode isEqualTo:@(OP_PC_FETCH)]) {
       NSLog(@"PC FETCH");
-      // Each word contains 6 instructions of 5 bits each
-      // PC puts the word into a temporary buffer called ISR
-      if (findInEnumerator([_registers keyEnumerator], @"PC")) {
-        NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
-        @try {
-          [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
-                         forKey:@"ISR"];
-          [_registers setObject:@(valueOfPC + 1) forKey:@"PC"];
-        } @catch (NSException *exception) {
-          @throw
-              [NSException exceptionWithName:@"Out of Memory"
-                                      reason:@"Uh oh... we ran out of memory :("
-                                    userInfo:nil];
-        }
-      } else {
-        @throw [NSException exceptionWithName:@"Stack Underflow"
-                                       reason:@"Attempting to read value to "
-                                              @"undefined 'PC' register"
-                                     userInfo:nil];
-      }
+      [self instructionOpPcFetch];
     } else if ([opcode isEqualTo:@(OP_JUMP)]) {
       NSLog(@"JUMPING");
-      if (findInEnumerator([_registers keyEnumerator], @"PC")) {
-        NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
-        [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
-                       forKey:@"PC"];
-      } else {
-        @throw [NSException exceptionWithName:@"Stack Underflow"
-                                       reason:@"Attempting to read value to "
-                                              @"undefined 'PC' register"
-                                     userInfo:nil];
-      }
+      [self instructionOpJump];
     } else if ([opcode isEqualTo:@(OP_JUMP_ZERO)]) {
       NSLog(@"JUMPING ZERO");
-      if (findInEnumerator([_registers keyEnumerator], @"PC")) {
-        @try {
-          id poppedValue = [_dataStack pop];
-          NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
-          if ([poppedValue isEqualTo:@0]) {
-            [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
-                           forKey:@"PC"];
-          } else {
-            [_registers setObject:@(valueOfPC + 1) forKey:@"PC"];
-          }
-        } @catch (NSException *exception) {
-          @throw exception;
-        }
-      } else {
-        @throw [NSException exceptionWithName:@"Stack Underflow"
-                                       reason:@"Attempting to read value to "
-                                              @"undefined 'PC' register"
-                                     userInfo:nil];
-      }
+      [self instructionOpJumpZero];
     } else if ([opcode isEqualTo:@(OP_JUMP_PLUS)]) {
       NSLog(@"JUMPING PLUS");
-      if (findInEnumerator([_registers keyEnumerator], @"PC")) {
-        @try {
-          id poppedValue = [_dataStack pop];
-          NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
-          if ([poppedValue isGreaterThan:@0]) {
-            [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
-                           forKey:@"PC"];
-          } else {
-            [_registers setObject:@(valueOfPC + 1) forKey:@"PC"];
-          }
-        } @catch (NSException *exception) {
-          @throw exception;
-        }
-      } else {
-        @throw [NSException exceptionWithName:@"Stack Underflow"
-                                       reason:@"Attempting to read value to "
-                                              @"undefined 'PC' register"
-                                     userInfo:nil];
-      }
+      [self instructionOpJumpPlus];
     } else if ([opcode isEqualTo:@(OP_CALL)]) {
       NSLog(@"CALLING");
-      if (findInEnumerator([_registers keyEnumerator], @"PC")) {
-        NSUInteger valueOfPC = [[_registers objectForKey:@"PC"] integerValue];
-        [_returnStack push:@(valueOfPC + 1)];
-        [_instructionStack push:[_registers objectForKey:@"ISR"]];
-        [_registers setObject:[_memoryRAM objectAtIndex:valueOfPC]
-                       forKey:@"PC"];
-        [_registers setObject:@0
-                       forKey:@"ISR"];	
-      } else {
-        @throw [NSException exceptionWithName:@"Stack Underflow"
-                                       reason:@"Attempting to read value to "
-                                              @"undefined 'PC' register"
-                                     userInfo:nil];
-      }
+      [self instructionOpCall];
     } else if ([opcode isEqualTo:@(OP_RET)]) {
       NSLog(@"RETURNING");
-      if (findInEnumerator([_registers keyEnumerator], @"PC")) {
-        @try {
-          id poppedValue = [_returnStack pop];
-          [_registers setObject:[_instructionStack pop] forKey:@"ISR"];
-          [_registers setObject:poppedValue forKey:@"PC"];
-        } @catch (NSException *exception) {
-          @throw exception;
-        }
-      } else {
-        @throw [NSException exceptionWithName:@"Stack Underflow"
-                                       reason:@"Attempting to read value to "
-                                              @"undefined 'PC' register"
-                                     userInfo:nil];
-      }
+      [self instructionOpRet];
     } else if ([opcode isEqualTo:@(OP_LITERAL)]) {
       NSLog(@"FETCH LITERAL");      
       [self instructionOpLiteral];

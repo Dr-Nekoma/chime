@@ -1,8 +1,192 @@
 #import "Headers/VM.h"
 #import "Headers/VM+Instructions.h"
+#import "Headers/Utilities.h"
 #import <Foundation/Foundation.h>
 
 @implementation VM (Instructions)
+
+- (void)instructionOpPushA {
+  if (findInEnumerator([self.registers keyEnumerator], @"A")) {
+    id valueOfA = [self.registers objectForKey:@"A"];
+    [self.dataStack push:valueOfA];
+  } else {
+    @throw [NSException
+	     exceptionWithName:@"Stack Underflow"
+			reason:
+	       @"Attempting to push value to undefined 'A' register"
+		      userInfo:nil];
+  }
+}
+
+- (void)instructionOpPopA {
+  @try {
+    id valueOfA = [self.dataStack pop];
+    [self.registers setObject:valueOfA forKey:@"A"];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
+}
+
+- (void)instructionOpPushR {
+  @try {
+    id valueOfR = [self.dataStack pop];
+    [self.instructionStack push:@0];
+    [self.returnStack push:valueOfR];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
+}
+
+- (void)instructionOpPopR {
+  @try {
+    id valueOfR = [self.returnStack pop];
+    [self.instructionStack pop];
+    [self.dataStack push:valueOfR];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
+}
+
+- (void)instructionOpDup {
+  @try {
+    [self.dataStack push:[self.dataStack peek]];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
+}
+
+- (void)instructionOpDrop {
+  @try {
+    [self.dataStack pop];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
+}
+
+- (void)instructionOpOver {
+   @try {
+     id top = [self.dataStack pop];
+     id second = [self.dataStack peek];
+     [self.dataStack push:top];
+     [self.dataStack push:second];
+   } @catch (NSException *exception) {
+     @throw exception;
+   }
+}
+
+- (void)instructionOpPcFetch {
+  // Each word contains 6 instructions of 5 bits each
+  // PC puts the word into a temporary buffer called ISR
+  if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
+    NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
+    @try {
+      [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
+		     forKey:@"ISR"];
+      [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
+    } @catch (NSException *exception) {
+      @throw
+	[NSException exceptionWithName:@"Out of Memory"
+				reason:@"Uh oh... we ran out of memory :("
+			      userInfo:nil];
+    }
+  } else {
+    @throw [NSException exceptionWithName:@"Stack Underflow"
+				   reason:@"Attempting to read value to "
+			@"undefined 'PC' register"
+				 userInfo:nil];
+  }
+}
+
+- (void)instructionOpJump {
+  if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
+    NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
+    [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
+		   forKey:@"PC"];
+  } else {
+    @throw [NSException exceptionWithName:@"Stack Underflow"
+				   reason:@"Attempting to read value to "
+			@"undefined 'PC' register"
+				 userInfo:nil];
+  }
+}
+
+- (void)instructionOpJumpZero {
+  if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
+    @try {
+      id poppedValue = [self.dataStack pop];
+      NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
+      if ([poppedValue isEqualTo:@0]) {
+	[self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
+		       forKey:@"PC"];
+      } else {
+	[self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
+      }
+    } @catch (NSException *exception) {
+      @throw exception;
+    }
+  } else {
+    @throw [NSException exceptionWithName:@"Stack Underflow"
+				   reason:@"Attempting to read value to "
+			@"undefined 'PC' register"
+				 userInfo:nil];
+  }
+}
+
+- (void)instructionOpJumpPlus {
+  if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
+    @try {
+      id poppedValue = [self.dataStack pop];
+      NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
+      if ([poppedValue isGreaterThan:@0]) {
+	[self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
+		       forKey:@"PC"];
+      } else {
+	[self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
+      }
+    } @catch (NSException *exception) {
+      @throw exception;
+    }
+  } else {
+    @throw [NSException exceptionWithName:@"Stack Underflow"
+				   reason:@"Attempting to read value to "
+			@"undefined 'PC' register"
+				 userInfo:nil];
+  }
+}
+
+- (void)instructionOpCall {
+  if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
+    NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
+    [self.returnStack push:@(valueOfPC + 1)];
+    [self.instructionStack push:[self.registers objectForKey:@"ISR"]];
+    [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
+		   forKey:@"PC"];
+    [self.registers setObject:@0
+		   forKey:@"ISR"];	
+  } else {
+    @throw [NSException exceptionWithName:@"Stack Underflow"
+				   reason:@"Attempting to read value to "
+			@"undefined 'PC' register"
+				 userInfo:nil];
+  }
+}
+
+- (void)instructionOpRet {
+  if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
+    @try {
+      id poppedValue = [self.returnStack pop];
+      [self.registers setObject:[self.instructionStack pop] forKey:@"ISR"];
+      [self.registers setObject:poppedValue forKey:@"PC"];
+    } @catch (NSException *exception) {
+      @throw exception;
+    }
+  } else {
+    @throw [NSException exceptionWithName:@"Stack Underflow"
+				   reason:@"Attempting to read value to "
+			@"undefined 'PC' register"
+				 userInfo:nil];
+  }
+}
 
 - (void)instructionOpLiteral {
   NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];

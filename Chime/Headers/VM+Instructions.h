@@ -2,7 +2,34 @@
 #import <Foundation/Foundation.h>
 
 @interface VM (Instructions)
-- (void)instructionOpFetch;
+
+- (void)instructionOpPushA;
+
+- (void)instructionOpPopA;
+
+- (void)instructionOpPushR;
+
+- (void)instructionOpPopR;
+
+- (void)instructionOpDup;
+
+- (void)instructionOpDrop;
+
+- (void)instructionOpOver;
+
+- (void)instructionOpPcFetch;
+
+- (void)instructionOpJump;
+
+- (void)instructionOpJumpZero;
+
+- (void)instructionOpJumpPlus;
+
+- (void)instructionOpCall;
+
+- (void)instructionOpRet;
+     
+- (void)instructionOpLiteral;
 
 - (void)instructionOpLoadA;
 
