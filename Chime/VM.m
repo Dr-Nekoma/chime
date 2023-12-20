@@ -31,6 +31,18 @@
   _memoryRAM = [[NSMutableArray alloc] init];
 }
 
+- (void)printState {
+  NSLog(@"Data Stack:");
+  [_dataStack printStack];
+  NSLog(@"Return Stack:");
+  [_returnStack printStack];
+  NSLog(@"Instruction Stack:");
+  [_instructionStack printStack];
+  NSLog(@"Registers' Keys: %@", [[_registers keyEnumerator] allObjects]);
+  NSLog(@"Registers' Values: %@", [[_registers objectEnumerator] allObjects]);  
+  NSLog(@"RAM: %@", _memoryRAM);   
+}
+
 - (void)Execute:(NSString *)program {
 /*
  [[call halt pc_fetch]
