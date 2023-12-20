@@ -6,8 +6,8 @@
 
 @interface Stack : NSObject
 
-@property (assign) NSUInteger size;
-@property (retain) NSMutableArray *arr;
+@property(assign) NSUInteger size;
+@property(retain) NSMutableArray *arr;
 
 - (Stack *)init;
 - (bool)isEmpty;

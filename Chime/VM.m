@@ -5,8 +5,8 @@
 //  Created by Marcos Magueta on 18/11/23.
 //
 
-#import "Headers/VM+Instructions.h"
 #import "Headers/Utilities.h"
+#import "Headers/VM+Instructions.h"
 
 #include <stdlib.h>
 
@@ -39,35 +39,38 @@
   NSLog(@"Instruction Stack:");
   [_instructionStack printStack];
   NSLog(@"Registers' Keys: %@", [[_registers keyEnumerator] allObjects]);
-  NSLog(@"Registers' Values: %@", [[_registers objectEnumerator] allObjects]);  
-  NSLog(@"RAM: %@", _memoryRAM);   
+  NSLog(@"Registers' Values: %@", [[_registers objectEnumerator] allObjects]);
+  NSLog(@"RAM: %@", _memoryRAM);
 }
 
 - (void)Execute:(NSString *)program {
-/*
- [[call halt pc_fetch]
-  3
-  [add ret pc_fetch]
-  [fetch fetch fetch call jump pc_fetch]
-  3
-  4
-  5
-  2
-  2
- ]
-*/
-  OPCODE word0[6] = {OP_CALL, OP_HALT, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
-  OPCODE word2[6] = {OP_PLUS, OP_RET, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
-  OPCODE word3[6] = {OP_LITERAL, OP_LITERAL, OP_LITERAL, OP_CALL, OP_JUMP, OP_PC_FETCH};
+  /*
+   [[call halt pc_fetch]
+    3
+    [add ret pc_fetch]
+    [fetch fetch fetch call jump pc_fetch]
+    3
+    4
+    5
+    2
+    2
+   ]
+  */
+  OPCODE word0[6] = {OP_CALL,     OP_HALT,     OP_PC_FETCH,
+                     OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
+  OPCODE word2[6] = {OP_PLUS,     OP_RET,      OP_PC_FETCH,
+                     OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
+  OPCODE word3[6] = {OP_LITERAL, OP_LITERAL, OP_LITERAL,
+                     OP_CALL,    OP_JUMP,    OP_PC_FETCH};
   [_memoryRAM addObject:@(packWord(word0))]; // 0
-  [_memoryRAM addObject:@3]; // 1
+  [_memoryRAM addObject:@3];                 // 1
   [_memoryRAM addObject:@(packWord(word2))]; // 2
   [_memoryRAM addObject:@(packWord(word3))]; // 3
-  [_memoryRAM addObject:@3]; // 4
-  [_memoryRAM addObject:@4]; // 5
-  [_memoryRAM addObject:@5]; // 6
-  [_memoryRAM addObject:@2]; // 7
-  [_memoryRAM addObject:@2]; // 8
+  [_memoryRAM addObject:@3];                 // 4
+  [_memoryRAM addObject:@4];                 // 5
+  [_memoryRAM addObject:@5];                 // 6
+  [_memoryRAM addObject:@2];                 // 7
+  [_memoryRAM addObject:@2];                 // 8
   [_registers setObject:@0 forKey:@"PC"];
   return [self Evaluate];
 }
@@ -76,7 +79,7 @@
   id opcode;
   if (findInEnumerator([_registers keyEnumerator], @"ISR")) {
     uint32_t opcodes =
-      from64To32([[_registers objectForKey:@"ISR"] integerValue]);
+        from64To32([[_registers objectForKey:@"ISR"] integerValue]);
     // This is a mask to remove the ending 2 bits of any number
     opcodes &= -8;
     opcode = @(opcodes >> 27);
@@ -89,7 +92,7 @@
 }
 
 - (void)Evaluate {
-  while(true) {
+  while (true) {
     id opcode = [self collectNextInstruction];
     if ([opcode isEqualTo:@(OP_HALT)]) {
       NSLog(@"HALTING");
@@ -135,22 +138,22 @@
       NSLog(@"RETURNING");
       [self instructionOpRet];
     } else if ([opcode isEqualTo:@(OP_LITERAL)]) {
-      NSLog(@"FETCH LITERAL");      
+      NSLog(@"FETCH LITERAL");
       [self instructionOpLiteral];
     } else if ([opcode isEqualTo:@(OP_LOAD_A)]) {
       NSLog(@"LOAD A");
       [self instructionOpLoadA];
     } else if ([opcode isEqualTo:@(OP_STORE_A)]) {
-      NSLog(@"STORE A");      
+      NSLog(@"STORE A");
       [self instructionOpStoreA];
     } else if ([opcode isEqualTo:@(OP_AND)]) {
-      NSLog(@"AND");      
+      NSLog(@"AND");
       [self instructionOpAnd];
     } else if ([opcode isEqualTo:@(OP_OR)]) {
       NSLog(@"OR");
       [self instructionOpOr];
     } else if ([opcode isEqualTo:@(OP_NOT)]) {
-      NSLog(@"NOT");      
+      NSLog(@"NOT");
       [self instructionOpNot];
     } else if ([opcode isEqualTo:@(OP_XOR)]) {
       NSLog(@"XOR");
@@ -168,19 +171,19 @@
       NSLog(@"PLUS STAR");
       [self instructionOpPlusStar];
     } else if ([opcode isEqualTo:@(OP_LOAD_A_PLUS)]) {
-      NSLog(@"LOAD A PLUS");      
+      NSLog(@"LOAD A PLUS");
       [self instructionOpLoadAPlus];
     } else if ([opcode isEqualTo:@(OP_STORE_A_PLUS)]) {
-      NSLog(@"STORE A PLUS");      
+      NSLog(@"STORE A PLUS");
       [self instructionOpStoreAPlus];
     } else if ([opcode isEqualTo:@(OP_LOAD_R_PLUS)]) {
-      NSLog(@"LOAD R PLUS");      
+      NSLog(@"LOAD R PLUS");
       [self instructionOpLoadRPlus];
     } else if ([opcode isEqualTo:@(OP_STORE_R_PLUS)]) {
-      NSLog(@"STORE R PLUS");      
+      NSLog(@"STORE R PLUS");
       [self instructionOpStoreRPlus];
     } else if ([opcode isEqualTo:@(OP_NOP)]) {
-      NSLog(@"NOP");      
+      NSLog(@"NOP");
     } else {
       NSLog(@"DEFAULT");
       return;

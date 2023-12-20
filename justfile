@@ -8,4 +8,6 @@ executableName := "chime"
 
 build:
 	{{compiler}} {{optionalFlags}} {{objcFlags}} {{nixFlags}} {{headers}} {{sourceFiles}} -o {{executableName}}
-	
+
+format:
+	clang-format -i $(find ./ -type f \( -iname \*.m -o -iname \*.h \))

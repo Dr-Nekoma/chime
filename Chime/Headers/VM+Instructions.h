@@ -28,7 +28,7 @@
 - (void)instructionOpCall;
 
 - (void)instructionOpRet;
-     
+
 - (void)instructionOpLiteral;
 
 - (void)instructionOpLoadA;
