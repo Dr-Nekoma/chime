@@ -262,37 +262,52 @@
                                      userInfo:nil];
       }
     } else if ([opcode isEqualTo:@(OP_FETCH)]) {
-        instruction_op_fetch(_registers, _dataStack, _memoryRAM);
+      NSLog(@"FETCH");      
+      instruction_op_fetch(_registers, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_LOAD_A)]) {
-        instruction_op_load_a(_registers, _dataStack, _memoryRAM);
+      NSLog(@"LOAD A");
+      instruction_op_load_a(_registers, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_STORE_A)]) {
-        instruction_op_store_a(_registers, _dataStack, _memoryRAM);
+      NSLog(@"STORE A");      
+      instruction_op_store_a(_registers, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_AND)]) {
-        instruction_op_and(_dataStack);
+      NSLog(@"AND");      
+      instruction_op_and(_dataStack);
     } else if ([opcode isEqualTo:@(OP_OR)]) {
-        instruction_op_or(_dataStack);
+      NSLog(@"OR");
+      instruction_op_or(_dataStack);
     } else if ([opcode isEqualTo:@(OP_NOT)]) {
-        instruction_op_not(_dataStack);
+      NSLog(@"NOT");      
+      instruction_op_not(_dataStack);
     } else if ([opcode isEqualTo:@(OP_XOR)]) {
-        instruction_op_xor(_dataStack);
+      NSLog(@"XOR");
+      instruction_op_xor(_dataStack);
     } else if ([opcode isEqualTo:@(OP_PLUS)]) {
-        instruction_op_plus(_dataStack);
+      NSLog(@"PLUS");
+      instruction_op_plus(_dataStack);
     } else if ([opcode isEqualTo:@(OP_DOUBLE)]) {
-        instruction_op_double(_dataStack);
+      NSLog(@"DOUBLE");
+      instruction_op_double(_dataStack);
     } else if ([opcode isEqualTo:@(OP_HALF)]) {
-        instruction_op_half(_dataStack);
+      NSLog(@"HALF");
+      instruction_op_half(_dataStack);
     } else if ([opcode isEqualTo:@(OP_PLUS_STAR)]) {
-        instruction_op_plus_star(_dataStack);
+      NSLog(@"PLUS STAR");
+      instruction_op_plus_star(_dataStack);
     } else if ([opcode isEqualTo:@(OP_LOAD_A_PLUS)]) {
-        instruction_op_load_a_plus(_registers, _dataStack, _memoryRAM);
+      NSLog(@"LOAD A PLUS");      
+      instruction_op_load_a_plus(_registers, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_STORE_A_PLUS)]) {
-        instruction_op_store_a_plus(_registers, _dataStack, _memoryRAM);
+      NSLog(@"STORE A PLUS");      
+      instruction_op_store_a_plus(_registers, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_LOAD_R_PLUS)]) {
-        instruction_op_load_r_plus(_returnStack, _dataStack, _memoryRAM);
+      NSLog(@"LOAD R PLUS");      
+      instruction_op_load_r_plus(_returnStack, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_STORE_R_PLUS)]) {
-        instruction_op_store_r_plus(_returnStack, _dataStack, _memoryRAM);
+      NSLog(@"STORE R PLUS");      
+      instruction_op_store_r_plus(_returnStack, _dataStack, _memoryRAM);
     } else if ([opcode isEqualTo:@(OP_NOP)]) {
-        NSLog(@"NOP");
+      NSLog(@"NOP");      
     } else {
       NSLog(@"DEFAULT");
       return;
