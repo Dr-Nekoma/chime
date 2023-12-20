@@ -37,7 +37,8 @@ void instruction_op_or(Stack *_dataStack){
     return;
 }
 
-void instruction_op_not(Stack *_dataStack){ NSInteger value = [[_dataStack pop] integerValue];
+void instruction_op_not(Stack *_dataStack){ 
+      NSInteger value = [[_dataStack pop] integerValue];
     [_dataStack push:@(!value)];
     return;
 }
