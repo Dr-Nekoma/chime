@@ -20,6 +20,8 @@
 
 - (void)Execute:(NSString *)program;
 
+- (id)collectNextInstruction;
+
 @end
 
 #endif /* VM_h */

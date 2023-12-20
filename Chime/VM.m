@@ -72,20 +72,25 @@
   return [self Evaluate];
 }
 
-- (void)Evaluate {
+- (id)collectNextInstruction {
   id opcode;
-  while (true) {
-    if (findInEnumerator([_registers keyEnumerator], @"ISR")) {
-      uint32_t opcodes =
-          from64To32([[_registers objectForKey:@"ISR"] integerValue]);
-      // This is a mask to remove the ending 2 bits of any number
-      opcodes &= -8;
-      opcode = @(opcodes >> 27);
-      opcodes = opcodes << 5;
-      [_registers setObject:@(opcodes) forKey:@"ISR"];
-    } else {
-      opcode = @(OP_PC_FETCH);
-    }
+  if (findInEnumerator([_registers keyEnumerator], @"ISR")) {
+    uint32_t opcodes =
+      from64To32([[_registers objectForKey:@"ISR"] integerValue]);
+    // This is a mask to remove the ending 2 bits of any number
+    opcodes &= -8;
+    opcode = @(opcodes >> 27);
+    opcodes = opcodes << 5;
+    [_registers setObject:@(opcodes) forKey:@"ISR"];
+  } else {
+    opcode = @(OP_PC_FETCH);
+  }
+  return opcode;
+}
+
+- (void)Evaluate {
+  while(true) {
+    id opcode = [self collectNextInstruction];
     if ([opcode isEqualTo:@(OP_HALT)]) {
       NSLog(@"HALTING");
       NSLog(@"%lu", [[_dataStack peek] integerValue]);
