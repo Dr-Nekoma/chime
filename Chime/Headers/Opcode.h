@@ -11,8 +11,8 @@ typedef enum : uint64_t {
   OP_JUMP_PLUS,
   OP_CALL,
   OP_RET,
-  // Stack Manipulations
   OP_HALT,
+  // Stack Manipulations
   OP_PUSH_A,
   OP_POP_A,
   OP_PUSH_R,
