@@ -1,10 +1,3 @@
-//
-//  VM.h
-//  Chime
-//
-//  Created by Marcos Magueta on 17/11/23.
-//
-
 #ifndef VM_h
 #define VM_h
 
@@ -13,16 +6,21 @@
 
 @interface VM : NSObject
 
-@property Stack *dataStack;
-@property Stack *returnStack;
-@property NSMapTable *registers;
-@property NSMutableArray *memoryRAM;
+@property(retain) Stack *dataStack;
+@property(retain) Stack *returnStack;
+@property(retain) Stack *instructionStack;
+@property(retain) NSMapTable *registers;
+@property(retain) NSMutableArray *memoryRAM;
 
 - (VM *)init;
 
 - (void)clearCode;
 
+- (void)printState;
+
 - (void)Execute:(NSString *)program;
+
+- (id)collectNextInstruction;
 
 @end
 

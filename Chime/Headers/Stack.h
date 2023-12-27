@@ -6,14 +6,15 @@
 
 @interface Stack : NSObject
 
-@property NSUInteger size;
-@property NSMutableArray *arr;
+@property(assign) NSUInteger size;
+@property(retain) NSMutableArray *arr;
 
 - (Stack *)init;
 - (bool)isEmpty;
 - (void)push:(id)elem;
 - (id)pop;
 - (id)peek;
+- (void)printStack;
 
 @end
 
