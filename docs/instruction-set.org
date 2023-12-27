@@ -1,0 +1,73 @@
+#+title: Chime Instruction Set
+
+* Flow Control
+
+** pc_fetch
+
+Fetch the value from the memory address in the PC, write it to ISR, increment PC.
+
+** jump
+
+Fetch the value from the memory address in the PC, write it to the PC, set ISR to zero.
+
+** jump_zero
+
+Pop the data stack.
+
+If popped value is zero, also fetch the value from the memory address in the PC, write it to the PC, set ISR to zero.
+
+If popped value is not zero, also increment PC.
+
+** jump_plus
+
+Pop the data stack.
+
+If popped value is positive, also fetch the value from the memory address in the PC, write it to the PC, set ISR to zero.
+
+If popped value is not positive, also increment PC.
+
+** call
+
+Fetch the value from the memory address in the PC, increment PC, push PC to the return stack, write the fetched value to PC, push ISR to the instruction stack, set ISR to zero.
+
+** return
+
+Pop the return stack, write the popped return address to PC, pop the instruction stack, write the popped instruction word to ISR.
+
+** halt
+
+Stop execution.
+
+* Stack Manipulation
+
+** push_r
+
+Pop the data stack, push the popped value into the return stack, push a zero into the instruction stack.
+
+** pop_r
+
+Pop the return stack, push the popped value into the data stack, pop the instruction stack.
+
+* Memory
+
+** load_a_plus
+
+Load the value from the memory address in the A register, push the loaded value into the data stack, increment the A register.
+
+** store_a_plus
+
+Pop the data stack, write the popped value to the memory address in the A register, increment the A register.
+
+** load_r_plus
+
+Load the value from the memory address in the top of the return stack, push the loaded value into the data stack, increment the top of the return stack.
+
+** store_r_plus
+
+Pop the data stack, write the popped value to the memory address in the top of the return stack, increment the top of the return stack.
+
+* Other
+
+** nop
+
+Do nothing.
