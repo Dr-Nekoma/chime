@@ -5,7 +5,7 @@
 //  Created by Marcos Magueta on 15/11/23.
 //
 
-#import "Headers/VM.h"
+#import "Headers/VM+Instructions.h"
 #import <Foundation/Foundation.h>
 
 int main(int argc, const char *argv[]) {
