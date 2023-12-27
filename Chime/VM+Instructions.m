@@ -29,8 +29,8 @@
 - (void)instructionOpPushR {
   @try {
     id valueOfR = [self.dataStack pop];
-    [self.instructionStack push:@0];
     [self.returnStack push:valueOfR];
+    [self.instructionStack push:@0];
   } @catch (NSException *exception) {
     @throw exception;
   }
@@ -39,8 +39,8 @@
 - (void)instructionOpPopR {
   @try {
     id valueOfR = [self.returnStack pop];
-    [self.instructionStack pop];
     [self.dataStack push:valueOfR];
+    [self.instructionStack pop];
   } @catch (NSException *exception) {
     @throw exception;
   }
@@ -100,6 +100,7 @@
     NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
     [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                        forKey:@"PC"];
+    [self.registers setObject:@0 forKey:@"ISR"];
   } else {
     @throw [NSException exceptionWithName:@"Stack Underflow"
                                    reason:@"Attempting to read value to "
@@ -116,6 +117,7 @@
       if ([poppedValue isEqualTo:@0]) {
         [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                            forKey:@"PC"];
+	[self.registers setObject:@0 forKey:@"ISR"];	
       } else {
         [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
       }
@@ -138,6 +140,7 @@
       if ([poppedValue isGreaterThan:@0]) {
         [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                            forKey:@"PC"];
+	[self.registers setObject:@0 forKey:@"ISR"];	
       } else {
         [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
       }
@@ -156,9 +159,9 @@
   if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
     NSUInteger valueOfPC = [[self.registers objectForKey:@"PC"] integerValue];
     [self.returnStack push:@(valueOfPC + 1)];
-    [self.instructionStack push:[self.registers objectForKey:@"ISR"]];
     [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                        forKey:@"PC"];
+    [self.instructionStack push:[self.registers objectForKey:@"ISR"]];
     [self.registers setObject:@0 forKey:@"ISR"];
   } else {
     @throw [NSException exceptionWithName:@"Stack Underflow"
@@ -172,8 +175,8 @@
   if (findInEnumerator([self.registers keyEnumerator], @"PC")) {
     @try {
       id poppedValue = [self.returnStack pop];
-      [self.registers setObject:[self.instructionStack pop] forKey:@"ISR"];
       [self.registers setObject:poppedValue forKey:@"PC"];
+      [self.registers setObject:[self.instructionStack pop] forKey:@"ISR"];
     } @catch (NSException *exception) {
       @throw exception;
     }
@@ -256,29 +259,29 @@
 - (void)instructionOpLoadAPlus {
   NSUInteger valueOfA = [[self.registers objectForKey:@"A"] integerValue];
   NSInteger value = [[self.memoryRAM objectAtIndex:valueOfA] integerValue];
-  [self.registers setObject:@(valueOfA + 1) forKey:@"A"];
   [self.dataStack push:@(value)];
+  [self.registers setObject:@(valueOfA + 1) forKey:@"A"];
 }
 
 - (void)instructionOpStoreAPlus {
-  NSUInteger valueOfA = [[self.registers objectForKey:@"A"] integerValue];
   id value = [self.dataStack pop];
-  [self.registers setObject:@(valueOfA + 1) forKey:@"A"];
+  NSUInteger valueOfA = [[self.registers objectForKey:@"A"] integerValue];
   [self.memoryRAM setObject:value atIndexedSubscript:valueOfA];
+  [self.registers setObject:@(valueOfA + 1) forKey:@"A"];
 }
 
 - (void)instructionOpLoadRPlus {
   NSUInteger valueOfR = [[self.returnStack pop] integerValue];
   NSInteger value = [[self.memoryRAM objectAtIndex:valueOfR] integerValue];
-  [self.returnStack push:@(valueOfR + 1)];
   [self.dataStack push:@(value)];
+  [self.returnStack push:@(valueOfR + 1)];
 }
 
 - (void)instructionOpStoreRPlus {
-  NSUInteger valueOfR = [[self.returnStack pop] integerValue];
   id value = [self.dataStack pop];
-  [self.returnStack push:@(valueOfR + 1)];
+  NSUInteger valueOfR = [[self.returnStack pop] integerValue];
   [self.memoryRAM setObject:value atIndexedSubscript:valueOfR];
+  [self.returnStack push:@(valueOfR + 1)];
 }
 
 @end
