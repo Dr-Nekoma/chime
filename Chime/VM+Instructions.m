@@ -117,7 +117,7 @@
       if ([poppedValue isEqualTo:@0]) {
         [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                            forKey:@"PC"];
-	[self.registers setObject:@0 forKey:@"ISR"];	
+        [self.registers setObject:@0 forKey:@"ISR"];
       } else {
         [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
       }
@@ -140,7 +140,7 @@
       if ([poppedValue isGreaterThan:@0]) {
         [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                            forKey:@"PC"];
-	[self.registers setObject:@0 forKey:@"ISR"];	
+        [self.registers setObject:@0 forKey:@"ISR"];
       } else {
         [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
       }

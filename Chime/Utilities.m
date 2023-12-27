@@ -2,10 +2,10 @@
 
 #include "Headers/Utilities.h"
 
-bool findInEnumerator(NSEnumerator *enumerator, id key) {
+bool findInEnumerator(NSEnumerator *enumerator, id target) {
   bool found = false;
   for (NSString *key in enumerator) {
-    if ([key isEqualToString:key]) {
+    if ([key isEqualToString:target]) {
       found = true;
       break;
     }
