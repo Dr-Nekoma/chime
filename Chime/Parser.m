@@ -1,5 +1,5 @@
-#import "Headers/Opcode.h"
 #import "Headers/Parser.h"
+#import "Headers/Opcode.h"
 #import "Headers/Utilities.h"
 #import <Foundation/Foundation.h>
 
@@ -11,14 +11,14 @@ NSMapTable *loadKeywords(char *filepath) {
   }
 
   NSString *stringKeywords =
-    [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+      [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
   NSArray *keywordsArr = [stringKeywords componentsSeparatedByString:@"\n"];
 
   NSMapTable *keywords = [[NSMapTable alloc] init];
-  
-  for(uint64_t i = 0; i < OP_TOTAL; i++){
-    [keywords setObject:@(i) forKey:[keywordsArr objectAtIndex:i]];      
+
+  for (uint64_t i = 0; i < OP_TOTAL; i++) {
+    [keywords setObject:@(i) forKey:[keywordsArr objectAtIndex:i]];
   }
 
   return keywords;
@@ -54,13 +54,12 @@ BOOL isStringStartingWith(NSString *line, NSString *target) {
 }
 
 static inline BOOL isLineEmpty(id line) {
-  return line == nil
-    || ([line respondsToSelector:@selector(length)]
-	&& [(NSData *)line length] == 0)
-    || ([line respondsToSelector:@selector(count)]
-	&& [(NSArray *)line count] == 0);
+  return line == nil ||
+         ([line respondsToSelector:@selector(length)] &&
+          [(NSData *)line length] == 0) ||
+         ([line respondsToSelector:@selector(count)] &&
+          [(NSArray *)line count] == 0);
 }
-
 
 BOOL isNumberLine(NSString *line) { return isStringStartingWith(line, @"#"); }
 
@@ -70,24 +69,20 @@ BOOL isVariableLine(NSString *line) {
   return isStringStartingWith(tokenAt(line, 1), @"#");
 }
 
-BOOL isAddressLine(NSString *line) {
-  return isStringStartingWith(line, @"&");
-}
+BOOL isAddressLine(NSString *line) { return isStringStartingWith(line, @"&"); }
 
-BOOL isDerefLine(NSString *line) {
-  return isStringStartingWith(line, @"*");
-}
+BOOL isDerefLine(NSString *line) { return isStringStartingWith(line, @"*"); }
 
 NSString *tokenAt(NSString *string, NSInteger index) {
   NSArray *line = [string componentsSeparatedByString:@" "];
-  if([line count] <= index) {
-     @throw [NSException
-            exceptionWithName:@"Line index out of bounds"
-                       reason:[NSString stringWithFormat:
-					  @"Could not find token at position %lu in line \"%@\"",
-					index,
-					line]
-                     userInfo:nil];
+  if ([line count] <= index) {
+    @throw [NSException
+        exceptionWithName:@"Line index out of bounds"
+                   reason:[NSString
+                              stringWithFormat:@"Could not find token at "
+                                               @"position %lu in line \"%@\"",
+                                               index, line]
+                 userInfo:nil];
   } else {
     return [line objectAtIndex:index];
   }
@@ -117,13 +112,14 @@ void passOne(NSArray *program, NSMapTable *labels, NSMapTable *variables) {
                                             @(counter)]
                      userInfo:nil];
       } else {
-	if (isVariableLine(lineId)) {
-	  NSString *secondToken = tokenAt(lineId, 1);
-	  NSString *number = popFirstChar(secondToken);
-	  [variables setObject:@((NSUInteger)[number integerValue]) forKey:label];	
-	} else {
-	  [labels setObject:@(counter) forKey:label];
-	}
+        if (isVariableLine(lineId)) {
+          NSString *secondToken = tokenAt(lineId, 1);
+          NSString *number = popFirstChar(secondToken);
+          [variables setObject:@((NSUInteger)[number integerValue])
+                        forKey:label];
+        } else {
+          [labels setObject:@(counter) forKey:label];
+        }
       }
     }
     counter++;
@@ -131,68 +127,74 @@ void passOne(NSArray *program, NSMapTable *labels, NSMapTable *variables) {
 }
 
 NSArray *popFirstToken(NSArray *stream) {
-  return [stream objectsAtIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, [stream count] - 1)]];
+  return [stream
+      objectsAtIndexes:[NSIndexSet
+                           indexSetWithIndexesInRange:NSMakeRange(
+                                                          1,
+                                                          [stream count] - 1)]];
 }
 
-NSMutableArray *passTwo(NSArray *program, NSMapTable *labels, NSMapTable *variables, NSMapTable *keywords) {
+NSMutableArray *passTwo(NSArray *program, NSMapTable *labels,
+                        NSMapTable *variables, NSMapTable *keywords) {
   NSMutableArray *bytecodes = [[NSMutableArray alloc] init];
   NSEnumerator *programEnumerator = [program objectEnumerator];
   id lineId;
   NSUInteger counter = 0;
   while (lineId = [programEnumerator nextObject]) {
-    if (!isLineEmpty(lineId)){
+    if (!isLineEmpty(lineId)) {
       if (isLabelLine(lineId)) {
-      	if (!isVariableLine(lineId)) {
-	  NSArray *line = [lineId componentsSeparatedByString:@" "];
-	  NSArray *instructions = popFirstToken(line);
-	  uint32_t word = packFullWord(instructions, keywords);
-	  [bytecodes addObject:@(word)];
-	}    
+        if (!isVariableLine(lineId)) {
+          NSArray *line = [lineId componentsSeparatedByString:@" "];
+          NSArray *instructions = popFirstToken(line);
+          uint32_t word = packFullWord(instructions, keywords);
+          [bytecodes addObject:@(word)];
+        }
       } else {
-	if (isNumberLine(lineId)) {
-	  NSString *number = popFirstChar(lineId);
-	  [bytecodes addObject:@((uint32_t)[number integerValue])];
-	} else if (isAddressLine(lineId)) {
-	  NSString *label = popFirstChar(lineId);
-	  if (findInEnumerator([labels keyEnumerator], label)) {
-	    id valueOfLabel = [labels objectForKey:label];
-	    [bytecodes addObject:@((uint32_t)[valueOfLabel integerValue])];
-	  } else {
-	    @throw [NSException
-		     exceptionWithName:@"Address Label Not Found"
-				reason:[NSString stringWithFormat:
-						   @"Could not find address label \"%@\" in current scope at line %@",
-						 label,
-						 @(counter)]
-			      userInfo:nil];
-	  }
-	} else if (isDerefLine(lineId)) {
-	  NSString *label = popFirstChar(lineId);
-	  if (findInEnumerator([variables keyEnumerator], label)) {
-	    id valueOfLabel = [variables objectForKey:label];
-	    [bytecodes addObject:@((uint32_t)[valueOfLabel integerValue])];
-	  } else {
-	    @throw [NSException
-		     exceptionWithName:@"Variable Label Not Found"
-				reason:[NSString stringWithFormat:
-						   @"Could not find variable label \"%@\" in current scope at line %@",
-						 label,
-						 @(counter)]
-			      userInfo:nil];
-	  }
-	} else {
-	  NSLog(@"This is a print 4");
-	  @throw [NSException
-		   exceptionWithName:@"Invalid line encountered"
-			      reason:[NSString stringWithFormat:
-						    @"\nLine %@:\n \"%@\" is invalid",
-					       @(counter),
-					       lineId]
-			    userInfo:nil];
-	}
+        if (isNumberLine(lineId)) {
+          NSString *number = popFirstChar(lineId);
+          [bytecodes addObject:@((uint32_t)[number integerValue])];
+        } else if (isAddressLine(lineId)) {
+          NSString *label = popFirstChar(lineId);
+          if (findInEnumerator([labels keyEnumerator], label)) {
+            id valueOfLabel = [labels objectForKey:label];
+            [bytecodes addObject:@((uint32_t)[valueOfLabel integerValue])];
+          } else {
+            @throw [NSException
+                exceptionWithName:@"Address Label Not Found"
+                           reason:[NSString
+                                      stringWithFormat:
+                                          @"Could not find address label "
+                                          @"\"%@\" in current scope at line %@",
+                                          label, @(counter)]
+                         userInfo:nil];
+          }
+        } else if (isDerefLine(lineId)) {
+          NSString *label = popFirstChar(lineId);
+          if (findInEnumerator([variables keyEnumerator], label)) {
+            id valueOfLabel = [variables objectForKey:label];
+            [bytecodes addObject:@((uint32_t)[valueOfLabel integerValue])];
+          } else {
+            @throw [NSException
+                exceptionWithName:@"Variable Label Not Found"
+                           reason:[NSString
+                                      stringWithFormat:
+                                          @"Could not find variable label "
+                                          @"\"%@\" in current scope at line %@",
+                                          label, @(counter)]
+                         userInfo:nil];
+          }
+        } else {
+          NSLog(@"This is a print 4");
+          @throw [NSException
+              exceptionWithName:@"Invalid line encountered"
+                         reason:[NSString stringWithFormat:
+                                              @"\nLine %@:\n \"%@\" is invalid",
+                                              @(counter), lineId]
+                       userInfo:nil];
+        }
       }
     }
-    
+
     counter++;
   }
   return bytecodes;

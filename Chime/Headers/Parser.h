@@ -28,6 +28,7 @@ NSString *popFirstChar(NSString *string);
 
 void passOne(NSArray *program, NSMapTable *labels, NSMapTable *variables);
 
-NSMutableArray *passTwo(NSArray *program, NSMapTable *labels, NSMapTable *variables, NSMapTable *keywords);
+NSMutableArray *passTwo(NSArray *program, NSMapTable *labels,
+                        NSMapTable *variables, NSMapTable *keywords);
 
 #endif // Parser_h

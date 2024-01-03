@@ -5,8 +5,8 @@
 //  Created by Marcos Magueta on 18/11/23.
 //
 
+#import "Headers/Parser.h"
 #import "Headers/Utilities.h"
-#import "Headers/Parser.h" 
 #import "Headers/VM+Instructions.h"
 
 #include <stdlib.h>
@@ -44,8 +44,9 @@
   NSLog(@"RAM: %@", _memoryRAM);
 }
 
-- (void)Execute:(NSString *)program usingKeywords:(NSString *)keywordSet{
-  _memoryRAM = parse(strdup([program UTF8String]), strdup([keywordSet UTF8String]));
+- (void)Execute:(NSString *)program usingKeywords:(NSString *)keywordSet {
+  _memoryRAM =
+      parse(strdup([program UTF8String]), strdup([keywordSet UTF8String]));
   [_registers setObject:@0 forKey:@"PC"];
   return [self Evaluate];
 }

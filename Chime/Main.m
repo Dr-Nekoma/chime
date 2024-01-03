@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 
 int main(int argc, const char *argv[]) {
-  if(argc < 3) {
+  if (argc < 3) {
     NSLog(@"Program and/or Keyword set is missing");
     return 1;
   }
