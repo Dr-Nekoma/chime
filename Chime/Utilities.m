@@ -2,10 +2,10 @@
 
 #include "Headers/Utilities.h"
 
-bool findInEnumerator(NSEnumerator *enumerator, id key) {
+bool findInEnumerator(NSEnumerator *enumerator, id target) {
   bool found = false;
   for (NSString *key in enumerator) {
-    if ([key isEqualToString:key]) {
+    if ([key isEqualToString:target]) {
       found = true;
       break;
     }
@@ -23,4 +23,25 @@ uint32_t packWord(OPCODE *opcodes) {
   }
   word = word << 2;
   return word;
+}
+
+uint32_t packFullWord(NSArray *instructions, NSMapTable *keywordsMap) {
+  OPCODE word[6] = {0};
+  for (int i = 0; i < [instructions count]; i++) {
+    // Generic things that you do to objects of *any* class go here.
+    if (findInEnumerator([keywordsMap keyEnumerator], instructions[i])) {
+      uint64_t opcode =
+          (uint64_t)[[keywordsMap objectForKey:instructions[i]] integerValue];
+      word[i] = opcode;
+    } else {
+      @throw [NSException
+          exceptionWithName:@"Invalid instruction"
+                     reason:[NSString
+                                stringWithFormat:@"The instruction \"%@\" is "
+                                                 @"invalid in Chime",
+                                                 instructions[i]]
+                   userInfo:nil];
+    }
+  }
+  return packWord(word);
 }

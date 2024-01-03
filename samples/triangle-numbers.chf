@@ -1,0 +1,15 @@
+:main literal call halt
+#5
+&triangle
+
+:triangle literal jump
+#0
+&triangle-loop
+
+:triangle-loop over jump-0 over plus push-r literal
+&triangle-end
+#-1
+plus pop-r jump
+&triangle-loop
+
+:triangle-end push-r drop pop-r ret
