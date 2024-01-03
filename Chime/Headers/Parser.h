@@ -4,16 +4,30 @@
 #import <Foundation/Foundation.h>
 #include <stdint.h>
 
-id parse(char *filepath);
+NSMapTable *loadKeywords(char *filePath);
 
-BOOL isLineStartingWith(NSString *line, NSString *target);
+NSMutableArray *parse(char *filePath, char *keywordsPath);
+
+NSString *tokenAt(NSString *string, NSInteger index);
+
+BOOL isStringStartingWith(NSString *line, NSString *target);
+
+static inline BOOL isLineEmpty(id line);
 
 BOOL isNumberLine(NSString *line);
 
+BOOL isAddressLine(NSString *line);
+
+BOOL isDerefLine(NSString *line);
+
 BOOL isLabelLine(NSString *line);
 
-NSMapTable *passOne(NSArray *program);
+BOOL isVariableLine(NSString *line);
 
-NSMutableArray *passTwo(NSMapTable *labels, NSArray *program);
+NSString *popFirstChar(NSString *string);
+
+void passOne(NSArray *program, NSMapTable *labels, NSMapTable *variables);
+
+NSMutableArray *passTwo(NSArray *program, NSMapTable *labels, NSMapTable *variables, NSMapTable *keywords);
 
 #endif // Parser_h

@@ -10,10 +10,13 @@
 #import <Foundation/Foundation.h>
 
 int main(int argc, const char *argv[]) {
-  // @autoreleasepool {
-  //   VM *vm = [VM new];
-  //   [vm Execute:@""];
-  // }
-  parse("samples/sum.chf");
+  if(argc < 3) {
+    NSLog(@"Program and/or Keyword set is missing");
+    return 1;
+  }
+  @autoreleasepool {
+    VM *vm = [VM new];
+    [vm Execute:@(argv[1]) usingKeywords:@(argv[2])];
+  }
   return 0;
 }
