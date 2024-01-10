@@ -1,4 +1,4 @@
-:main literal call halt
+:main literal literal call halt
 #1025
 #612
 &minus

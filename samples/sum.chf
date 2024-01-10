@@ -1,6 +1,6 @@
-:main literal literal + halt
+:main literal literal plus halt
 *firstNumber
 *secondNumber
 
-:firstNumber #34
-:secondNumber #35
+>firstNumber #34
+>secondNumber #35
