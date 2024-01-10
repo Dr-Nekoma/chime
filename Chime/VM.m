@@ -48,6 +48,7 @@
   _memoryRAM =
       parse(strdup([program UTF8String]), strdup([keywordSet UTF8String]));
   [_registers setObject:@0 forKey:@"PC"];
+  [_registers setObject:@0 forKey:@"A"];
   return [self Evaluate];
 }
 
@@ -57,7 +58,7 @@
     uint32_t opcodes =
         from64To32([[_registers objectForKey:@"ISR"] integerValue]);
     // This is a mask to remove the ending 2 bits of any number
-    opcodes &= -8;
+    opcodes &= -(1 << 2);
     opcode = @(opcodes >> 27);
     opcodes = opcodes << 5;
     [_registers setObject:@(opcodes) forKey:@"ISR"];
@@ -73,6 +74,7 @@
     if ([opcode isEqualTo:@(OP_HALT)]) {
       NSLog(@"HALTING");
       NSLog(@"%lu", [[_dataStack peek] integerValue]);
+      // NSLog(@"RAM: %@", _memoryRAM);
       return;
     } else if ([opcode isEqualTo:@(OP_PUSH_A)]) {
       NSLog(@"PUSHING TO A");
