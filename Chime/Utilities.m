@@ -15,7 +15,7 @@ bool findInEnumerator(NSEnumerator *enumerator, id target) {
 
 uint32_t from64To32(uint64_t value) { return 0xFFFFFFFF & value; }
 
-uint32_t packWord(OPCODE *opcodes) {
+NSInteger packWord(OPCODE *opcodes) {
   uint32_t word = 0;
   for (int i = 0; i < 6; i++) {
     word = word << 5;
@@ -25,13 +25,14 @@ uint32_t packWord(OPCODE *opcodes) {
   return word;
 }
 
-uint32_t packFullWord(NSArray *instructions, NSMapTable *keywordsMap) {
+NSInteger packFullWord(NSArray *instructions, NSMapTable *keywordsMap) {
   OPCODE word[6] = {0};
   for (int i = 0; i < [instructions count]; i++) {
     // Generic things that you do to objects of *any* class go here.
     if (findInEnumerator([keywordsMap keyEnumerator], instructions[i])) {
       uint64_t opcode =
           (uint64_t)[[keywordsMap objectForKey:instructions[i]] integerValue];
+      // NSLog(@"%lu", opcode);
       word[i] = opcode;
     } else {
       @throw [NSException

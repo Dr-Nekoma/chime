@@ -6,10 +6,10 @@
 
 bool findInEnumerator(NSEnumerator *, id);
 
-uint32_t from64To32(uint64_t);
+uint32_t from64To32(uint64_t value);
 
-uint32_t packWord(OPCODE *opcodes);
+NSInteger packWord(OPCODE *opcodes);
 
-uint32_t packFullWord(NSArray *instructions, NSMapTable *keywords);
+NSInteger packFullWord(NSArray *instructions, NSMapTable *keywords);
 
 #endif /* Utilities_h */

@@ -28,6 +28,8 @@ NSString *popFirstChar(NSString *string);
 
 void passOne(NSArray *program, NSMapTable *labels, NSMapTable *variables);
 
+uint32_t validateInstructions(NSString *line, NSMapTable *keywords);
+
 NSMutableArray *passTwo(NSArray *program, NSMapTable *labels,
                         NSMapTable *variables, NSMapTable *keywords);
 
