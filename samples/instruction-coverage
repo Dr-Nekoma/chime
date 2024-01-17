@@ -1,18 +1,18 @@
 OP_PC_FETCH = 0, // triangle
 OP_JUMP, // triangle
 OP_JUMP_ZERO, // triangle
-OP_JUMP_PLUS,
+OP_JUMP_PLUS, // collatz
 OP_CALL, // triangle
 OP_RET, // triangle
 OP_HALT, // triangle
 
-OP_PUSH_A, // variable
-OP_POP_A,
+OP_PUSH_A,
+OP_POP_A, // variable
 OP_PUSH_R, // triangle
 OP_POP_R, // triangle
 OP_OVER, // triangle
-OP_DUP, //variable
-OP_DROP,
+OP_DUP, // variable
+OP_DROP, // triangle
 
 OP_LOAD_A, // variable
 OP_STORE_A,
@@ -22,13 +22,13 @@ OP_LOAD_R_PLUS,
 OP_STORE_R_PLUS,
 OP_LITERAL, // triangle
 
-OP_AND,
+OP_AND, // collatz
 OP_NOT, // negation
 OP_OR,
 OP_XOR, // equal
 OP_PLUS, // triangle
 OP_DOUBLE, // negation
-OP_HALF,
-OP_PLUS_STAR,
+OP_HALF, // collatz
+OP_PLUS_STAR, // short-multiplication
 
 OP_NOP
