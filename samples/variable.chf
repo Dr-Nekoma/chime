@@ -1,9 +1,9 @@
-:main literal pop-a load-a double dup store-a-plus
+:main literal push-a load-a double dup store-a-plus
 &thing
 
 double dup store-a-plus double dup store-a-plus
 
-double store-a-plus literal pop-a load-a-plus load-a-plus
+double store-a-plus literal push-a load-a-plus load-a-plus
 &thing
 plus load-a-plus plus load-a-plus plus halt
 
