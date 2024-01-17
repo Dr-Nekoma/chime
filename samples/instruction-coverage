@@ -24,7 +24,7 @@ OP_LITERAL, // triangle
 
 OP_AND, // collatz
 OP_NOT, // negation
-OP_OR,
+OP_OR, // or
 OP_XOR, // equal
 OP_PLUS, // triangle
 OP_DOUBLE, // negation
