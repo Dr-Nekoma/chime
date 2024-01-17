@@ -6,7 +6,7 @@ OP_CALL, // triangle
 OP_RET, // triangle
 OP_HALT, // triangle
 
-OP_PUSH_A,
+OP_PUSH_A, // clobbering-identity
 OP_POP_A, // variable
 OP_PUSH_R, // triangle
 OP_POP_R, // triangle
