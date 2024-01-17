@@ -1,0 +1,14 @@
+:main literal push-r load-r-plus double dup store-r-plus
+&thing
+
+dup double store-r-plus dup double store-r-plus
+
+pop-r drop literal push-r load-r-plus load-r-plus
+&thing
+plus load-r-plus plus load-r-plus plus halt
+
+
+:thing #1
+#0
+#0
+#0

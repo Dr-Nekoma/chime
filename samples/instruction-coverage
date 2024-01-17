@@ -15,11 +15,11 @@ OP_DUP, // variable
 OP_DROP, // triangle
 
 OP_LOAD_A, // variable
-OP_STORE_A,
+OP_STORE_A, // store
 OP_LOAD_A_PLUS, // variable
 OP_STORE_A_PLUS, // variable
-OP_LOAD_R_PLUS,
-OP_STORE_R_PLUS,
+OP_LOAD_R_PLUS, // variable-r
+OP_STORE_R_PLUS, // variable-r
 OP_LITERAL, // triangle
 
 OP_AND, // collatz
