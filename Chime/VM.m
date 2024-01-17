@@ -45,8 +45,9 @@
 }
 
 - (void)Execute:(NSString *)program usingKeywords:(NSString *)keywordSet {
-  _memoryRAM =
-      parse(strdup([program UTF8String]), strdup([keywordSet UTF8String]));
+  Parser *parser = [Parser new];
+  _memoryRAM = [parser Parse:strdup([program UTF8String])
+               usingKeywords:strdup([keywordSet UTF8String])];
   [_registers setObject:@0 forKey:@"PC"];
   [_registers setObject:@0 forKey:@"A"];
   return [self Evaluate];

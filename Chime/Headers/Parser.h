@@ -4,33 +4,20 @@
 #import <Foundation/Foundation.h>
 #include <stdint.h>
 
-NSMapTable *loadKeywords(char *filePath);
+@interface Parser : NSObject
 
-NSMutableArray *parse(char *filePath, char *keywordsPath);
+@property(retain) NSArray *program;
+@property(retain) NSMapTable *labels;
+@property(retain) NSMapTable *variables;
+@property(retain) NSMapTable *keywords;
+@property NSUInteger counter;
 
-NSString *tokenAt(NSString *string, NSInteger index);
+- (Parser *)init;
 
-BOOL isStringStartingWith(NSString *line, NSString *target);
+- (NSMutableArray *)Parse:(char *)filePath usingKeywords:(char *)keywordsPath;
 
-static inline BOOL isLineEmpty(id line);
+- (void)printState;
 
-BOOL isNumberLine(NSString *line);
-
-BOOL isAddressLine(NSString *line);
-
-BOOL isDerefLine(NSString *line);
-
-BOOL isLabelLine(NSString *line);
-
-BOOL isVariableLine(NSString *line);
-
-NSString *popFirstChar(NSString *string);
-
-void passOne(NSArray *program, NSMapTable *labels, NSMapTable *variables);
-
-uint32_t validateInstructions(NSString *line, NSMapTable *keywords);
-
-NSMutableArray *passTwo(NSArray *program, NSMapTable *labels,
-                        NSMapTable *variables, NSMapTable *keywords);
+@end
 
 #endif // Parser_h
