@@ -14,6 +14,7 @@
     _labels = [[NSMapTable alloc] init];
     _variables = [[NSMapTable alloc] init];
     _keywords = [[NSMapTable alloc] init];
+    _counter = 0;
   }
   return self;
 }
@@ -100,7 +101,6 @@ NSString *popFirstChar(NSString *string) {
   }
 }
 
-// TODO: Investigate modal code sections for compile time area and run time area
 - (void)handleVariableLine:(NSString *)line {
   NSString *variableLabel = popFirstChar(tokenAt(line, 0));
   NSString *secondToken = tokenAt(line, 1);
@@ -215,21 +215,21 @@ NSArray *popFirstToken(NSArray *stream) {
 
 - (NSMutableArray *)passTwo {
   NSMutableArray *bytecodes = [[NSMutableArray alloc] init];
-  NSEnumerator *programEnumerator = [_program objectEnumerator];
-  id lineId;
+  NSEnumerator *programLines = [_program objectEnumerator];
+  id line;
   _counter = 0;
-  while (lineId = [programEnumerator nextObject]) {
-    if (!isLineEmpty(lineId) && !isVariableLine(lineId)) {
-      if (isLabelLine(lineId)) {
-        NSString *secondToken = tokenAt(lineId, 1);
-        [self handleLine:lineId
+  while (line = [programLines nextObject]) {
+    if (!isLineEmpty(line) && !isVariableLine(line)) {
+      if (isLabelLine(line)) {
+        NSString *secondToken = tokenAt(line, 1);
+        [self handleLine:line
                labelInfo:IS_LABEL
                 checking:secondToken
                     fill:bytecodes];
       } else {
-        [self handleLine:lineId
+        [self handleLine:line
                labelInfo:IS_NOT_LABEL
-                checking:lineId
+                checking:line
                     fill:bytecodes];
       }
     }
