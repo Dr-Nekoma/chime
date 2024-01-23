@@ -1,0 +1,11 @@
+:main literal literal call halt
+#413
+#414
+&equal
+
+:equal xor jump-0 literal ret
+&true
+#0
+
+:true literal ret
+#-1

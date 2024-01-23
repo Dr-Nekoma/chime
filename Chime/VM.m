@@ -5,6 +5,7 @@
 //  Created by Marcos Magueta on 18/11/23.
 //
 
+#import "Headers/Parser.h"
 #import "Headers/Utilities.h"
 #import "Headers/VM+Instructions.h"
 
@@ -43,35 +44,12 @@
   NSLog(@"RAM: %@", _memoryRAM);
 }
 
-- (void)Execute:(NSString *)program {
-  /*
-   [[call halt pc_fetch]
-    3
-    [add ret pc_fetch]
-    [fetch fetch fetch call jump pc_fetch]
-    3
-    4
-    5
-    2
-    2
-   ]
-  */
-  OPCODE word0[6] = {OP_CALL,     OP_HALT,     OP_PC_FETCH,
-                     OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
-  OPCODE word2[6] = {OP_PLUS,     OP_RET,      OP_PC_FETCH,
-                     OP_PC_FETCH, OP_PC_FETCH, OP_PC_FETCH};
-  OPCODE word3[6] = {OP_LITERAL, OP_LITERAL, OP_LITERAL,
-                     OP_CALL,    OP_JUMP,    OP_PC_FETCH};
-  [_memoryRAM addObject:@(packWord(word0))]; // 0
-  [_memoryRAM addObject:@3];                 // 1
-  [_memoryRAM addObject:@(packWord(word2))]; // 2
-  [_memoryRAM addObject:@(packWord(word3))]; // 3
-  [_memoryRAM addObject:@3];                 // 4
-  [_memoryRAM addObject:@4];                 // 5
-  [_memoryRAM addObject:@5];                 // 6
-  [_memoryRAM addObject:@2];                 // 7
-  [_memoryRAM addObject:@2];                 // 8
+- (void)Execute:(NSString *)program usingKeywords:(NSString *)keywordSet {
+  Parser *parser = [Parser new];
+  _memoryRAM = [parser Parse:strdup([program UTF8String])
+               usingKeywords:strdup([keywordSet UTF8String])];
   [_registers setObject:@0 forKey:@"PC"];
+  [_registers setObject:@0 forKey:@"A"];
   return [self Evaluate];
 }
 
@@ -81,7 +59,7 @@
     uint32_t opcodes =
         from64To32([[_registers objectForKey:@"ISR"] integerValue]);
     // This is a mask to remove the ending 2 bits of any number
-    opcodes &= -8;
+    opcodes &= -(1 << 2);
     opcode = @(opcodes >> 27);
     opcodes = opcodes << 5;
     [_registers setObject:@(opcodes) forKey:@"ISR"];
@@ -97,6 +75,7 @@
     if ([opcode isEqualTo:@(OP_HALT)]) {
       NSLog(@"HALTING");
       NSLog(@"%lu", [[_dataStack peek] integerValue]);
+      // NSLog(@"RAM: %@", _memoryRAM);
       return;
     } else if ([opcode isEqualTo:@(OP_PUSH_A)]) {
       NSLog(@"PUSHING TO A");

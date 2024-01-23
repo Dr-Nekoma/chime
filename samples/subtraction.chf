@@ -1,0 +1,10 @@
+:main literal literal call halt
+#1025
+#612
+&minus
+
+:negate not literal plus ret
+#1
+
+:minus call plus ret
+&negate

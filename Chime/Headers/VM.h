@@ -18,7 +18,7 @@
 
 - (void)printState;
 
-- (void)Execute:(NSString *)program;
+- (void)Execute:(NSString *)program usingKeywords:(NSString *)keywords;
 
 - (id)collectNextInstruction;
 

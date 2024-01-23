@@ -1,0 +1,20 @@
+:main literal literal call halt
+#413
+#612
+&short-multiplication
+
+>16-bits #65535
+
+:short-multiplication literal and push-r call pop-r +*
+*16-bits
+&shift-16-left
+/2 +* /2 +* /2 +*
+/2 +* /2 +* /2 +*
+/2 +* /2 +* /2 +*
+/2 +* /2 +* /2 +*
+/2 +* /2 +* /2 +*
+/2 push-r drop pop-r ret
+
+:shift-16-left double double double double double double
+double double double double double double
+double double double double ret

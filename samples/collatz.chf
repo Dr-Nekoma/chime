@@ -1,0 +1,32 @@
+:main literal call halt
+#27
+&collatz
+
+:collatz dup jump+ drop literal ret
+&collatz-body
+#-1
+
+:collatz-body dup literal and jump-0 dup literal
+#1
+&collatz-even
+#1
+
+call jump-0 ret
+&equal
+&collatz-odd
+
+:collatz-even /2 jump
+&collatz-body
+
+:collatz-odd dup dup plus plus literal plus
+#1
+
+/2 jump
+&collatz-body
+
+:equal xor jump-0 literal ret
+&true
+#0
+
+:true literal ret
+#-1

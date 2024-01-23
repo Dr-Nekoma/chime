@@ -10,6 +10,7 @@ A runtime at your service.
 - [ ] Address Management
 - [ ] Neutral instructions
 - [ ] Function calls and closures
+- [ ] Translator between dialects
 
 * References
 

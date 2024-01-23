@@ -6,6 +6,15 @@
 @implementation VM (Instructions)
 
 - (void)instructionOpPushA {
+  @try {
+    id valueOfA = [self.dataStack pop];
+    [self.registers setObject:valueOfA forKey:@"A"];
+  } @catch (NSException *exception) {
+    @throw exception;
+  }
+}
+
+- (void)instructionOpPopA {
   if (findInEnumerator([self.registers keyEnumerator], @"A")) {
     id valueOfA = [self.registers objectForKey:@"A"];
     [self.dataStack push:valueOfA];
@@ -14,15 +23,6 @@
         exceptionWithName:@"Stack Underflow"
                    reason:@"Attempting to push value to undefined 'A' register"
                  userInfo:nil];
-  }
-}
-
-- (void)instructionOpPopA {
-  @try {
-    id valueOfA = [self.dataStack pop];
-    [self.registers setObject:valueOfA forKey:@"A"];
-  } @catch (NSException *exception) {
-    @throw exception;
   }
 }
 
@@ -117,7 +117,7 @@
       if ([poppedValue isEqualTo:@0]) {
         [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                            forKey:@"PC"];
-	[self.registers setObject:@0 forKey:@"ISR"];	
+        [self.registers setObject:@0 forKey:@"ISR"];
       } else {
         [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
       }
@@ -140,7 +140,7 @@
       if ([poppedValue isGreaterThan:@0]) {
         [self.registers setObject:[self.memoryRAM objectAtIndex:valueOfPC]
                            forKey:@"PC"];
-	[self.registers setObject:@0 forKey:@"ISR"];	
+        [self.registers setObject:@0 forKey:@"ISR"];
       } else {
         [self.registers setObject:@(valueOfPC + 1) forKey:@"PC"];
       }

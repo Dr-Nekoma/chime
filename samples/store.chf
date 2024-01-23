@@ -1,0 +1,5 @@
+literal push-a literal store-a load-a halt
+&cell
+#1025
+
+:cell #0
