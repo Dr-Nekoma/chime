@@ -66,6 +66,6 @@
       clang
       libobjc2))
   (synopsis "Dr Nekoma's Stack-based VM")
-  (home-page "https://github.com/Dr-Nekoma/RacketowerDB")
+  (home-page "https://github.com/Dr-Nekoma/chime")
   (license license:expat)
   (description "Dr Nekoma's official Stack-based VM.  Currently a toy Stack-based VM."))
