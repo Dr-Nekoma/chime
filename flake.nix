@@ -46,7 +46,7 @@
             type = "app";
             program = toString (pkgs.writeShellScript "execute-program" ''
               output=$(${mktemp})
-              ${clang} -lobjc -lgnustep-base -fobjc-runtime=gnustep-2.0 -I${gnustepBaseDev}/include -I${gnustepMake}/include -I${gnustepLibObjc}/include -I${gnustepLibObjc}/include -L${gnustepBaseLib}/lib -I./Chime/Headers ./Chime/VM+Instructions.m ./Chime/VM.m ./Chime/Stack.m ./Chime/Utilities.m ./Chime/Parser.m ./Chime/Main.m -o $output
+              ${clang} -Wall -O2 -pthread -fPIC -Wunused-command-line-argument -lobjc -lgnustep-base -fobjc-runtime=gnustep-2.0 -I${gnustepBaseDev}/include -I${gnustepMake}/include -I${gnustepLibObjc}/include -L${gnustepLibObjc}/lib -L${gnustepBaseLib}/lib -I./Chime/Headers ./Chime/VM+Instructions.m ./Chime/VM.m ./Chime/Stack.m ./Chime/Utilities.m ./Chime/Parser.m ./Chime/Main.m -o $output
             '');
           };
 
