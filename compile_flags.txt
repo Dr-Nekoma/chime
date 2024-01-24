@@ -1,6 +1,0 @@
--I/Library/Developer/CommandLineTools/SDKs/MacOSX13.3.sdk/System/Library/Frameworks/Foundation.framework/Versions/C/Headers
--Wall
--O2
--pthread
--fPIC
--Wunused-command-line-argument
