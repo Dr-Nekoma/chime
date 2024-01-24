@@ -59,7 +59,6 @@
   (native-inputs
     (list
       gnustep-make
-      pkg-config
       just))
   (inputs
     (list
