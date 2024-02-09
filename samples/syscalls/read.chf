@@ -1,0 +1,10 @@
+:main literal literal literal literal syscall halt
+&readSyscallContent
+*readSize
+*stdinDevice
+*readSyscall
+
+>stdinDevice #0
+>readSyscall #0
+>readSize #10
+:readSyscallContent #3435

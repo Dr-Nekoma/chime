@@ -1,0 +1,8 @@
+:main literal literal literal syscall halt
+&writeSyscallContent
+*stdoutDevice
+*writeSyscall
+
+>stdoutDevice #3
+>writeSyscall #1	
+:writeSyscallContent #3435

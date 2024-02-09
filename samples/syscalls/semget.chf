@@ -1,0 +1,10 @@
+:main literal literal literal literal syscall halt
+*semFlags
+*nSems
+*key
+*semgetSyscall
+
+>semFlags #0
+>nSems #1
+>key #3124234123412341243214
+>semgetSyscall #64
