@@ -149,7 +149,8 @@ BOOL checkBothStringEnds(NSString *string) {
   NSUInteger length = stringContent.length;
   NSUInteger lengthByte = 1;
   NSUInteger howManyWords = (length / WORD_SIZE) + (length % WORD_SIZE ? 1 : 0);
-  // This minus is to account with the existent logic of incrementing the logical counter for the next round.
+  // This minus is to account with the existent logic of incrementing the
+  // logical counter for the next round.
   *logicalLinesCounter += howManyWords + lengthByte - 1;
   return;
 }
