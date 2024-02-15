@@ -4,6 +4,8 @@
 
 #define IS_LABEL YES
 #define IS_NOT_LABEL NO
+#define MAX_STRING_SIZE 2147483647
+#define WORD_SIZE 4
 
 @implementation Parser
 
@@ -14,7 +16,7 @@
     _labels = [[NSMapTable alloc] init];
     _variables = [[NSMapTable alloc] init];
     _keywords = [[NSMapTable alloc] init];
-    _counter = 0;
+    _physicalLinesCounter = 0;
   }
   return self;
 }
@@ -81,8 +83,17 @@ NSString *popFirstChar(NSString *string) {
   return [string substringFromIndex:1];
 }
 
+NSString *popLastChar(NSString *string) {
+  return [string substringToIndex:(string.length - 1)];
+}
+
+NSString *popBothEnds(NSString *string) {
+  NSString *withoutFirst = popFirstChar(string);
+  return popLastChar(withoutFirst);
+}
+
 - (void)handleLabelLine:(NSString *)line
-        withLineCounter:(NSUInteger)nonEmptyLinesCounter {
+        withLineCounter:(NSUInteger)logicalLinesCounter {
   NSString *labelColon = tokenAt(line, 0);
   NSString *label = popFirstChar(labelColon);
   if (findInEnumerator([_labels keyEnumerator], label)) {
@@ -94,10 +105,10 @@ NSString *popFirstChar(NSString *string) {
                                                label,
                                                [[_labels objectForKey:label]
                                                    integerValue],
-                                               @(_counter)]
+                                               @(_physicalLinesCounter)]
                  userInfo:nil];
   } else {
-    [_labels setObject:@(nonEmptyLinesCounter) forKey:label];
+    [_labels setObject:@(logicalLinesCounter) forKey:label];
   }
 }
 
@@ -109,22 +120,58 @@ NSString *popFirstChar(NSString *string) {
                  forKey:variableLabel];
 }
 
+BOOL isChimeString(NSString *string) {
+  return isStringStartingWith(string, @"\"");
+}
+
+BOOL checkBothStringEnds(NSString *string) {
+  return ('\"' == [string characterAtIndex:0]) &&
+         ('\"' == [string characterAtIndex:(string.length - 1)]);
+}
+
+- (void)handleStringCase:(NSString *)line
+         withLineCounter:(NSUInteger *)logicalLinesCounter {
+  NSString *stringCandidate = tokenAt(line, 1);
+  if (!isChimeString(stringCandidate)) {
+    return;
+  }
+
+  if (!checkBothStringEnds(stringCandidate)) {
+    @throw [NSException
+        exceptionWithName:@"Invalid String"
+                   reason:[NSString
+                              stringWithFormat:
+                                  @"Found string unbalanced delimiter at %lu",
+                                  _physicalLinesCounter]
+                 userInfo:nil];
+  }
+  NSString *stringContent = popBothEnds(stringCandidate);
+  NSUInteger length = stringContent.length;
+  NSUInteger lengthByte = 1;
+  NSUInteger howManyWords = (length / WORD_SIZE) + (length % WORD_SIZE ? 1 : 0);
+  // This minus is to account with the existent logic of incrementing the
+  // logical counter for the next round.
+  *logicalLinesCounter += howManyWords + lengthByte - 1;
+  return;
+}
+
 - (void)passOne {
   NSEnumerator *programEnumerator = [_program objectEnumerator];
   id lineId;
-  _counter = 0;
-  NSUInteger nonEmptyLinesCounter = 0;
+  _physicalLinesCounter = 0;
+  NSUInteger logicalLinesCounter = 0;
   while (lineId = [programEnumerator nextObject]) {
     if (!isLineEmpty(lineId)) {
       if (isLabelLine(lineId)) {
-        [self handleLabelLine:lineId withLineCounter:nonEmptyLinesCounter];
+        [self handleLabelLine:lineId withLineCounter:logicalLinesCounter];
+        [self handleStringCase:lineId withLineCounter:&logicalLinesCounter];
       } else if (isVariableLine(lineId)) {
         [self handleVariableLine:lineId];
-        nonEmptyLinesCounter--;
+        logicalLinesCounter--;
       }
-      nonEmptyLinesCounter++;
+      logicalLinesCounter++;
     }
-    _counter++;
+    _physicalLinesCounter++;
   }
 }
 
@@ -161,7 +208,7 @@ NSArray *popFirstToken(NSArray *stream) {
                    reason:[NSString stringWithFormat:
                                         @"Could not find variable label "
                                         @"\"%@\" in current scope at line %@",
-                                        label, @(_counter)]
+                                        label, @(_physicalLinesCounter)]
                  userInfo:nil];
   }
 }
@@ -177,7 +224,7 @@ NSArray *popFirstToken(NSArray *stream) {
                    reason:[NSString stringWithFormat:
                                         @"Could not find address label "
                                         @"\"%@\" in current scope at line %@",
-                                        label, @(_counter)]
+                                        label, @(_physicalLinesCounter)]
                  userInfo:nil];
   }
 }
@@ -193,9 +240,50 @@ NSArray *popFirstToken(NSArray *stream) {
         exceptionWithName:@"Invalid line encountered"
                    reason:[NSString stringWithFormat:
                                         @"\nLine %@:\n \"%@\" is invalid",
-                                        @(_counter), string]
+                                        @(_physicalLinesCounter), string]
                  userInfo:nil];
   }
+}
+
+NSMutableArray *packString(NSString *string) {
+  NSMutableArray *pack = [[NSMutableArray alloc] init];
+  NSUInteger counter = 0;
+  uint32_t buffer = 0;
+  NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
+  const char *bytes = [stringData bytes];
+  for (int i = 0; i < [stringData length]; i++) {
+    buffer = buffer << 8;
+    buffer |= (char)bytes[i];
+    counter++;
+    if (counter == WORD_SIZE) {
+      [pack addObject:@(buffer)];
+      buffer = 0;
+      counter = 0;
+    }
+  }
+  if (counter != 0) {
+    [pack addObject:@(buffer << (8 * (WORD_SIZE - counter)))];
+  }
+
+  return pack;
+}
+
+- (void)handleStringLine:(NSString *)chimeString
+                    fill:(NSMutableArray *)bytecodes {
+  NSString *content = popBothEnds(chimeString);
+  NSUInteger length = content.length; // TODO: Escape codes
+  if (length > MAX_STRING_SIZE) {
+    @throw [NSException
+        exceptionWithName:@"String limit exceeded"
+                   reason:[NSString
+                              stringWithFormat:
+                                  @"String \"%@\" exceeded max size of %d",
+                                  content, MAX_STRING_SIZE]
+                 userInfo:nil];
+  }
+  NSMutableArray *stringPayload = packString(content);
+  [bytecodes addObject:@((uint32_t)length)];
+  [bytecodes addObjectsFromArray:[stringPayload copy]];
 }
 
 - (void)handleLine:(NSString *)line
@@ -208,6 +296,8 @@ NSArray *popFirstToken(NSArray *stream) {
     [self handleDerefLine:check fill:bytecodes];
   } else if (isAddressLine(check)) {
     [self handleAddressLine:line fill:bytecodes];
+  } else if (isChimeString(check)) {
+    [self handleStringLine:check fill:bytecodes];
   } else {
     [self handleInstructions:labelInfo with:line fill:bytecodes];
   }
@@ -217,7 +307,7 @@ NSArray *popFirstToken(NSArray *stream) {
   NSMutableArray *bytecodes = [[NSMutableArray alloc] init];
   NSEnumerator *programLines = [_program objectEnumerator];
   id line;
-  _counter = 0;
+  _physicalLinesCounter = 0;
   while (line = [programLines nextObject]) {
     if (!isLineEmpty(line) && !isVariableLine(line)) {
       if (isLabelLine(line)) {
@@ -233,9 +323,20 @@ NSArray *popFirstToken(NSArray *stream) {
                     fill:bytecodes];
       }
     }
-    _counter++;
+    _physicalLinesCounter++;
   }
   return bytecodes;
+}
+
+NSArray *cleanProgram(NSString *stringProgram) {
+  NSMutableArray *trimmedProgram = [NSMutableArray array];
+  for (NSString *line in [stringProgram componentsSeparatedByString:@"\n"]) {
+    NSString *trimmedLine =
+        [line stringByTrimmingCharactersInSet:[NSCharacterSet
+                                                  whitespaceCharacterSet]];
+    [trimmedProgram addObject:trimmedLine];
+  }
+  return [trimmedProgram copy];
 }
 
 - (NSMutableArray *)Parse:(char *)filePath usingKeywords:(char *)keywordsPath {
@@ -249,7 +350,7 @@ NSArray *popFirstToken(NSArray *stream) {
   NSString *stringProgram =
       [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
 
-  _program = [stringProgram componentsSeparatedByString:@"\n"];
+  _program = cleanProgram(stringProgram);
 
   [self loadKeywords:keywordsPath];
   [self passOne];

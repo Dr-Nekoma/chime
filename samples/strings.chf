@@ -1,0 +1,6 @@
+:main literal halt
+&hello
+
+:hello "NAM\n"
+
+
