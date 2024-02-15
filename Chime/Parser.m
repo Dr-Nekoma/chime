@@ -5,6 +5,7 @@
 #define IS_LABEL YES
 #define IS_NOT_LABEL NO
 #define MAX_STRING_SIZE 2147483647
+#define WORD_SIZE 4
 
 @implementation Parser
 
@@ -144,12 +145,11 @@ BOOL checkBothStringEnds(NSString *string) {
                                   _physicalLinesCounter]
                  userInfo:nil];
   }
-
-  NSUInteger length = line.length;
-  NSUInteger wordSize = 4;
-  NSUInteger headerCount = 1;
-  NSUInteger howManyWords = (length / wordSize) + (length % wordSize ? 1 : 0);
-  *logicalLinesCounter += howManyWords + headerCount;
+  NSString *stringContent = popBothEnds(stringCandidate);
+  NSUInteger length = stringContent.length;
+  NSUInteger lengthByte = 1;
+  NSUInteger howManyWords = (length / WORD_SIZE) + (length % WORD_SIZE ? 1 : 0);
+  *logicalLinesCounter += howManyWords + lengthByte - 1;
   return;
 }
 
@@ -247,21 +247,20 @@ NSMutableArray *packString(NSString *string) {
   NSMutableArray *pack = [[NSMutableArray alloc] init];
   NSUInteger counter = 0;
   uint32_t buffer = 0;
-  NSUInteger wordSize = 4;
   NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
   const char *bytes = [stringData bytes];
   for (int i = 0; i < [stringData length]; i++) {
     buffer = buffer << 8;
     buffer |= (char)bytes[i];
     counter++;
-    if (counter == wordSize) {
+    if (counter == WORD_SIZE) {
       [pack addObject:@(buffer)];
       buffer = 0;
       counter = 0;
     }
   }
   if (counter != 0) {
-    [pack addObject:@(buffer << (8 * (wordSize - counter)))];
+    [pack addObject:@(buffer << (8 * (WORD_SIZE - counter)))];
   }
 
   return pack;
@@ -271,7 +270,6 @@ NSMutableArray *packString(NSString *string) {
                     fill:(NSMutableArray *)bytecodes {
   NSString *content = popBothEnds(chimeString);
   NSUInteger length = content.length; // TODO: Escape codes
-  NSMutableArray *stringPayload = packString(content);
   if (length > MAX_STRING_SIZE) {
     @throw [NSException
         exceptionWithName:@"String limit exceeded"
@@ -281,6 +279,7 @@ NSMutableArray *packString(NSString *string) {
                                   content, MAX_STRING_SIZE]
                  userInfo:nil];
   }
+  NSMutableArray *stringPayload = packString(content);
   [bytecodes addObject:@((uint32_t)length)];
   [bytecodes addObjectsFromArray:[stringPayload copy]];
 }
