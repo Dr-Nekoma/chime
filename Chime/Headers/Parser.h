@@ -10,7 +10,7 @@
 @property(retain) NSMapTable *labels;
 @property(retain) NSMapTable *variables;
 @property(retain) NSMapTable *keywords;
-@property NSUInteger counter;
+@property NSUInteger physicalLinesCounter;
 
 - (Parser *)init;
 

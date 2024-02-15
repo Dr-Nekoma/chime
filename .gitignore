@@ -4,3 +4,4 @@ compile_flags.txt
 *.out
 *.DS_Store
 Chime.xcodeproj/*
+result
