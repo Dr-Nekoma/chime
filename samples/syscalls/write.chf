@@ -3,6 +3,6 @@
 *stdoutDevice
 *writeSyscall
 
->stdoutDevice #3
+>stdoutDevice #1
 >writeSyscall #1	
-:writeSyscallContent #3435
+:writeSyscallContent "Ding! Hello from Chime!"

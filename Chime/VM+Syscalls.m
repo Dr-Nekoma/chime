@@ -12,59 +12,39 @@
 - (void)syscallRead {
   @try {
     id readDeviceID = [self.dataStack pop];
-    id readSize = [self.dataStack pop];    
-    id readContent = [self.dataStack pop];
-    char stringContent[10] = {0};
-    ssize_t bytesWritten = read([readDeviceID integerValue], &stringContent, 10);
-    // TODO: Add support for strings, the user should have access to the read content
-    printf("Read content: %s\n", &stringContent);
+    id contentPointer = [self.dataStack pop];
+    NSUInteger pointer = [contentPointer integerValue];
+    NSUInteger length = [[self.memoryRAM objectAtIndex:pointer] integerValue];
+    pointer++;
+    
+    Word_Manager wm = howManyWords(length);
+    char stringContent[length];
+    ssize_t bytesWritten = read([readDeviceID integerValue], stringContent, length);
+    NSUInteger upperLimit = wm.howManyWords;
+    NSArray *treatedInput = padWords(packString(@(stringContent)), upperLimit);
+
+    [self.memoryRAM replaceObjectsInRange:(NSMakeRange (pointer, upperLimit))
+		     withObjectsFromArray:treatedInput];
     [self.dataStack push:@(bytesWritten)];
   } @catch (NSException *exception) {
     @throw exception;
   }
 }
 
-
 - (void)syscallWrite {
   @try {
     id writeDeviceID = [self.dataStack pop];
-    id writeContent = [self.dataStack pop];
-    id value = [self.memoryRAM objectAtIndex:[writeContent integerValue]];
-    // TODO: Add support for strings, right now only numbers work
-    const char *stringContent = [[value stringValue] UTF8String];
+    id contentPointer = [self.dataStack pop];
+    
+    NSString *content = unpackString(contentPointer, self.memoryRAM);
+    const char *stringContent = [content UTF8String];
+    
     ssize_t bytesWritten = write([writeDeviceID integerValue], stringContent, strlen(stringContent));
     [self.dataStack push:@(bytesWritten)];
   } @catch (NSException *exception) {
     @throw exception;
   }
 }
-
-- (void)syscallSemGet {
-  @try {
-    // TODO: Figure out how to properly use keys for semaphores
-    id key = [self.dataStack pop];
-    id nSems = [self.dataStack pop];
-    id semFlag = [self.dataStack pop];
-    int semId = semget((key_t) [key integerValue], (int) [nSems integerValue], (int) [semFlag integerValue]);
-    [self.dataStack push:@(semId)];
-  } @catch (NSException *exception) {
-    @throw exception;
-  }
-}
-
-// - (void)syscallSemCtl {
-//   @try {
-//     id writeDeviceID = [self.dataStack pop];
-//     id writeContent = [self.dataStack pop];
-//     id value = [self.memoryRAM objectAtIndex:[writeContent integerValue]];
-//     // TODO: Add support for strings, right now only numbers work
-//     const char *stringContent = [[value stringValue] UTF8String];
-//     ssize_t bytesWritten = write([writeDeviceID integerValue], stringContent, strlen(stringContent));
-//     [self.dataStack push:@(bytesWritten)];
-//   } @catch (NSException *exception) {
-//     @throw exception;
-//   }
-// }
 
 - (void)instructionSyscall {
   @try {
@@ -75,16 +55,12 @@
     } else if ([syscallOpcode isEqualTo:@(SYSCALL_READ)]) {
       NSLog(@"READ SYSCALL");
       [self syscallRead];
-    } else if ([syscallOpcode isEqualTo:@(SYSCALL_SEMGET)]) {
-      NSLog(@"SEMGET SYSCALL");
-      [self syscallSemGet];
-    } else if ([syscallOpcode isEqualTo:@(SYSCALL_SEMOP)]) {
-      NSLog(@"SEMOP SYSCALL is not yet implemented");
-    }else if ([syscallOpcode isEqualTo:@(SYSCALL_SEMCTL)]) {
-      NSLog(@"SEMCTL SYSCALL is not yet implemented");
-      // [self syscallSemCtl];
-    }else {
-      NSLog(@"TODO: not yet implemented");      
+    } else {
+      @throw [NSException
+	       exceptionWithName:@"Unrecognized syscall opcode"
+			  reason:[NSString stringWithFormat:
+					     @"Could not find syscall with opcode &lu", [syscallOpcode integerValue]]
+			userInfo:nil];
     }
   } @catch (NSException *exception) {
     @throw exception;

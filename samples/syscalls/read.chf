@@ -1,10 +1,14 @@
-:main literal literal literal literal syscall halt
+:main literal literal literal syscall
 &readSyscallContent
-*readSize
 *stdinDevice
 *readSyscall
+literal literal literal syscall halt
+&readSyscallContent
+*stdoutDevice
+*writeSyscall
 
 >stdinDevice #0
 >readSyscall #0
->readSize #10
-:readSyscallContent #3435
+>stdoutDevice #1
+>writeSyscall #1	
+:readSyscallContent "000000000000000000000000000000"
