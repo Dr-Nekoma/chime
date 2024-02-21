@@ -14,7 +14,10 @@
 
 - (Parser *)init;
 
-- (NSMutableArray *)Parse:(char *)filePath usingKeywords:(char *)keywordsPath;
+- (NSMutableArray *)ParseProgram:(char *)filePath
+                   usingKeywords:(char *)keywordsPath;
+
+- (NSMutableArray *)ParseBytecode:(char *)filePath;
 
 - (void)printState;
 

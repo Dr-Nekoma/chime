@@ -12,4 +12,9 @@ NSInteger packWord(OPCODE *opcodes);
 
 NSInteger packFullWord(NSArray *instructions, NSMapTable *keywords);
 
+NSMapTable *parseCommandLine(int argc, const char *argv[]);
+
+void handleProgramAndDialect(NSMapTable *cmds, NSString *candidateProgram,
+                             NSString *candidateDialect);
+
 #endif /* Utilities_h */

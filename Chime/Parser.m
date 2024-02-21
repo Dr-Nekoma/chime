@@ -339,7 +339,13 @@ NSArray *cleanProgram(NSString *stringProgram) {
   return [trimmedProgram copy];
 }
 
-- (NSMutableArray *)Parse:(char *)filePath usingKeywords:(char *)keywordsPath {
+- (NSMutableArray *)ParseBytecode:(char *)filePath {
+  NSData *data = [[NSData alloc] initWithContentsOfFile:@(filePath)];
+  return [NSKeyedUnarchiver unarchiveObjectWithData:data];
+}
+
+- (NSMutableArray *)ParseProgram:(char *)filePath
+                   usingKeywords:(char *)keywordsPath {
   NSData *data = [[NSData alloc] initWithContentsOfFile:@(filePath)];
 
   if (data == nil) {

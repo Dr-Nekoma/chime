@@ -18,9 +18,13 @@
 
 - (void)printState;
 
-- (void)Execute:(NSString *)program usingKeywords:(NSString *)keywords;
+- (void)LoadProgram:(NSString *)program usingKeywords:(NSString *)keywordSet;
 
-- (id)collectNextInstruction;
+- (void)SaveProgram:(NSString *)filepath;
+
+- (void)LoadBytecode:(NSString *)bytecode;
+
+- (void)Evaluate;
 
 @end
 

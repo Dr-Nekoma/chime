@@ -46,3 +46,109 @@ NSInteger packFullWord(NSArray *instructions, NSMapTable *keywordsMap) {
   }
   return packWord(word);
 }
+
+void errorMissingProgramFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing program in command line"
+                 reason:[NSString stringWithFormat:
+                                      @"Expected the filepath of a program as "
+                                      @"the first argument in command line"]
+               userInfo:nil];
+}
+
+void errorMissingDialectFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing dialect set in command line"
+                 reason:[NSString stringWithFormat:
+                                      @"Expected the filepath of a dialect as "
+                                      @"the second argument in command line"]
+               userInfo:nil];
+}
+
+void errorMissingLoadFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing file path to load a compiled program"
+                 reason:[NSString stringWithFormat:
+                                      @"Loading operation expects a filepath "
+                                      @"to exist alongside the flag"]
+               userInfo:nil];
+}
+
+void errorMissingSaveFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing file path to save a compiled program"
+                 reason:[NSString stringWithFormat:
+                                      @"Saving operation expects a filepath to "
+                                      @"exist alongside the flag"]
+               userInfo:nil];
+}
+
+void errorExtraArguments(char *arg) {
+  @throw [NSException
+      exceptionWithName:@"Extra Arguments Provided"
+                 reason:[NSString
+                            stringWithFormat:
+                                @"Unexpected argument provided: \"%s\"", arg]
+               userInfo:nil];
+}
+
+NSMapTable *parseCommandLine(int argc, const char *argv[]) {
+  NSMapTable *cmds = [[NSMapTable alloc] init];
+
+  // Jumping the program in argv
+  BOOL programCaptured = NO;
+  for (int i = 1; i < argc; i++) {
+    if ((strcmp(argv[i], "-l") == 0) || (strcmp(argv[i], "--load") == 0)) {
+      if (argv[i + 1] == NULL) {
+        errorMissingLoadFilePath();
+      } else {
+        [cmds setObject:@(argv[i + 1]) forKey:@"LoadFilePath"];
+        i++;
+      }
+    } else if ((strcmp(argv[i], "-s") == 0) ||
+               (strcmp(argv[i], "--save") == 0)) {
+      if (argv[i + 1] == NULL) {
+        errorMissingSaveFilePath();
+      } else {
+        [cmds setObject:@(argv[i + 1]) forKey:@"SaveFilePath"];
+        i++;
+      }
+    } else {
+      if (([cmds objectForKey:@"ProgramFilePath"] != nil) &&
+          ([cmds objectForKey:@"DialectFilePath"] != nil)) {
+        errorExtraArguments(argv[i]);
+      } else {
+        if (!programCaptured) {
+          if (argv[i] == NULL) {
+            errorMissingProgramFilePath();
+          }
+          [cmds setObject:@(argv[i]) forKey:@"ProgramFilePath"];
+          programCaptured = YES;
+        } else {
+          if (argv[i] == NULL) {
+            errorMissingDialectFilePath();
+          }
+          [cmds setObject:@(argv[i]) forKey:@"DialectFilePath"];
+        }
+      }
+    }
+  }
+
+  return cmds;
+}
+
+void handleProgramAndDialect(NSMapTable *cmds,
+                             NSMutableString *candidateProgram,
+                             NSMutableString *candidateDialect) {
+  [candidateProgram setString:[cmds objectForKey:@"ProgramFilePath"]];
+  if (candidateProgram == nil) {
+    errorMissingProgramFilePath();
+  }
+
+  [candidateDialect setString:[cmds objectForKey:@"DialectFilePath"]];
+  if (candidateDialect == nil) {
+    errorMissingDialectFilePath();
+  }
+
+  return;
+}

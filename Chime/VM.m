@@ -44,13 +44,34 @@
   NSLog(@"RAM: %@", _memoryRAM);
 }
 
-- (void)Execute:(NSString *)program usingKeywords:(NSString *)keywordSet {
-  Parser *parser = [Parser new];
-  _memoryRAM = [parser Parse:strdup([program UTF8String])
-               usingKeywords:strdup([keywordSet UTF8String])];
+- (void)prepareRegisters {
   [_registers setObject:@0 forKey:@"PC"];
   [_registers setObject:@0 forKey:@"A"];
-  return [self Evaluate];
+}
+
+- (void)LoadProgram:(NSString *)program usingKeywords:(NSString *)keywordSet {
+  Parser *parser = [Parser new];
+  _memoryRAM = [parser ParseProgram:strdup([program UTF8String])
+                      usingKeywords:strdup([keywordSet UTF8String])];
+  [self prepareRegisters];
+  return;
+}
+
+- (void)SaveProgram:(NSString *)filepath {
+  NSError *error = nil;
+  NSData *data = [NSKeyedArchiver archivedDataWithRootObject:[_memoryRAM copy]];
+  [data writeToFile:filepath options:NSDataWritingAtomic error:&error];
+  if (error != nil) {
+    NSLog(@"Write returned error: %@", [error localizedDescription]);
+  }
+  return;
+}
+
+- (void)LoadBytecode:(NSString *)bytecode {
+  Parser *parser = [Parser new];
+  _memoryRAM = [parser ParseBytecode:strdup([bytecode UTF8String])];
+  [self prepareRegisters];
+  return;
 }
 
 - (id)collectNextInstruction {
