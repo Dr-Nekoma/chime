@@ -59,7 +59,7 @@
       @throw [NSException
 	       exceptionWithName:@"Unrecognized syscall opcode"
 			  reason:[NSString stringWithFormat:
-					     @"Could not find syscall with opcode &lu", [syscallOpcode integerValue]]
+					     @"Could not find syscall with opcode %lu", [syscallOpcode integerValue]]
 			userInfo:nil];
     }
   } @catch (NSException *exception) {
