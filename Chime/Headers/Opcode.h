@@ -39,7 +39,8 @@ typedef enum : uint64_t {
   OP_PLUS_STAR = 28,
   // Other
   OP_NOP = 29,
-  OP_TOTAL = 30
+  OP_SYSCALL = 30,
+  OP_TOTAL = 31
 } OPCODE;
 
 #endif /* Opcode_h */

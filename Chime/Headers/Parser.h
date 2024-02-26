@@ -4,6 +4,11 @@
 #import <Foundation/Foundation.h>
 #include <stdint.h>
 
+#define IS_LABEL YES
+#define IS_NOT_LABEL NO
+#define MAX_STRING_SIZE 2147483647
+#define WORD_SIZE 4
+
 @interface Parser : NSObject
 
 @property(retain) NSArray *program;

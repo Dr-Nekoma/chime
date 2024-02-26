@@ -1,0 +1,8 @@
+:main literal literal literal syscall halt
+&writeSyscallContent
+*stdoutDevice
+*writeSyscall
+
+>stdoutDevice #1
+>writeSyscall #1	
+:writeSyscallContent "Ding! Hello from Chime!"

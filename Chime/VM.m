@@ -8,6 +8,7 @@
 #import "Headers/Parser.h"
 #import "Headers/Utilities.h"
 #import "Headers/VM+Instructions.h"
+#import "Headers/VM+Syscalls.h"
 
 #include <stdlib.h>
 
@@ -74,7 +75,7 @@
     id opcode = [self collectNextInstruction];
     if ([opcode isEqualTo:@(OP_HALT)]) {
       NSLog(@"HALTING");
-      NSLog(@"%lu", [[_dataStack peek] integerValue]);
+      NSLog(@"%li", [[_dataStack peek] integerValue]);
       // NSLog(@"RAM: %@", _memoryRAM);
       return;
     } else if ([opcode isEqualTo:@(OP_PUSH_A)]) {
@@ -162,7 +163,10 @@
       NSLog(@"STORE R PLUS");
       [self instructionOpStoreRPlus];
     } else if ([opcode isEqualTo:@(OP_NOP)]) {
-      NSLog(@"NOP");
+      NSLog(@"NOP");      
+    } else if ([opcode isEqualTo:@(OP_SYSCALL)]) {
+      NSLog(@"SYSCALL");
+      [self instructionSyscall];
     } else {
       NSLog(@"DEFAULT");
       return;

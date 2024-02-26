@@ -28,3 +28,4 @@ double
 /2
 +*
 nop
+syscall
