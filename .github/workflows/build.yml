@@ -12,4 +12,4 @@ jobs:
         nix_path: nixpkgs=channel:nixos-unstable
     - uses: DeterminateSystems/magic-nix-cache-action@v2
     - run: echo "experimental-features = nix-command flakes" >> ~/.config/nix/nix.conf
-    - run: nix run .#build -L
+    - run: nix build .#chime

@@ -1,0 +1,14 @@
+:main literal literal literal syscall
+&readSyscallContent
+*stdinDevice
+*readSyscall
+literal literal literal syscall halt
+&readSyscallContent
+*stdoutDevice
+*writeSyscall
+
+>stdinDevice #0
+>readSyscall #0
+>stdoutDevice #1
+>writeSyscall #1	
+:readSyscallContent "000000000000000000000000000000"

@@ -2,11 +2,6 @@
 #import "Headers/Opcode.h"
 #import "Headers/Utilities.h"
 
-#define IS_LABEL YES
-#define IS_NOT_LABEL NO
-#define MAX_STRING_SIZE 2147483647
-#define WORD_SIZE 4
-
 @implementation Parser
 
 - (Parser *)init {
@@ -88,6 +83,21 @@ NSString *tokenAt(NSString *string, NSInteger index) {
   }
 }
 
+NSString *pureString(NSString *string, NSUInteger physicalLinesCounter) {
+  NSRange firstQuotePosition = [string rangeOfString:@"\""];
+  if (firstQuotePosition.location == NSNotFound) {
+        @throw [NSException
+        exceptionWithName:@"Could not find beginning of String"
+                   reason:[NSString
+                              stringWithFormat:@"Could not find \" token to identify beginning of string in line %lu",
+                                               physicalLinesCounter]
+                 userInfo:nil];
+  } else {
+    return [string substringFromIndex:firstQuotePosition.location];
+  }
+}
+
+
 NSString *popFirstChar(NSString *string) {
   return [string substringFromIndex:1];
 }
@@ -140,10 +150,11 @@ BOOL checkBothStringEnds(NSString *string) {
 
 - (void)handleStringCase:(NSString *)line
          withLineCounter:(NSUInteger *)logicalLinesCounter {
-  NSString *stringCandidate = tokenAt(line, 1);
-  if (!isChimeString(stringCandidate)) {
+  // TODO: We are checking the string condition twice in here and 3 lines below.
+  if (!isChimeString(tokenAt(line, 1))) {
     return;
   }
+  NSString *stringCandidate = pureString(line, _physicalLinesCounter);
 
   if (!checkBothStringEnds(stringCandidate)) {
     @throw [NSException
@@ -254,29 +265,6 @@ NSArray *popFirstToken(NSArray *stream) {
   }
 }
 
-NSMutableArray *packString(NSString *string) {
-  NSMutableArray *pack = [[NSMutableArray alloc] init];
-  NSUInteger counter = 0;
-  uint32_t buffer = 0;
-  NSData *stringData = [string dataUsingEncoding:NSUTF8StringEncoding];
-  const char *bytes = [stringData bytes];
-  for (int i = 0; i < [stringData length]; i++) {
-    buffer = buffer << 8;
-    buffer |= (char)bytes[i];
-    counter++;
-    if (counter == WORD_SIZE) {
-      [pack addObject:@(buffer)];
-      buffer = 0;
-      counter = 0;
-    }
-  }
-  if (counter != 0) {
-    [pack addObject:@(buffer << (8 * (WORD_SIZE - counter)))];
-  }
-
-  return pack;
-}
-
 - (void)handleStringLine:(NSString *)chimeString
                     fill:(NSMutableArray *)bytecodes {
   NSString *content = popBothEnds(chimeString);
@@ -306,7 +294,7 @@ NSMutableArray *packString(NSString *string) {
   } else if (isAddressLine(check)) {
     [self handleAddressLine:line fill:bytecodes];
   } else if (isChimeString(check)) {
-    [self handleStringLine:check fill:bytecodes];
+    [self handleStringLine:(pureString(line, _physicalLinesCounter)) fill:bytecodes];
   } else {
     [self handleInstructions:labelInfo with:line fill:bytecodes];
   }
