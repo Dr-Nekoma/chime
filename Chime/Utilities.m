@@ -48,6 +48,84 @@ NSInteger packFullWord(NSArray *instructions, NSMapTable *keywordsMap) {
   return packWord(word);
 }
 
+void errorMissingProgramFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing program in command line"
+                 reason:[NSString
+                            stringWithFormat:
+                                @"Expected the filepath of a program alonside "
+                                @"the flag \"-p\" or \"--program\""]
+               userInfo:nil];
+}
+
+void errorMissingDialectFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing dialect set in command line"
+                 reason:[NSString
+                            stringWithFormat:
+                                @"Expected the filepath of a dialect alongside "
+                                @"the flag \"-d\" or \"--dialect\""]
+               userInfo:nil];
+}
+
+void errorMissingLoadFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing file path to load a compiled program"
+                 reason:[NSString stringWithFormat:
+                                      @"Loading operation expects a filepath "
+                                      @"to exist alongside the flag"]
+               userInfo:nil];
+}
+
+void errorMissingSaveFilePath() {
+  @throw [NSException
+      exceptionWithName:@"Missing file path to save a compiled program"
+                 reason:[NSString stringWithFormat:
+                                      @"Saving operation expects a filepath to "
+                                      @"exist alongside the flag"]
+               userInfo:nil];
+}
+
+void errorExtraArguments(char *arg) {
+  @throw [NSException
+      exceptionWithName:@"Extra Arguments Provided"
+                 reason:[NSString
+                            stringWithFormat:
+                                @"Unexpected argument provided: \"%s\"", arg]
+               userInfo:nil];
+}
+
+NSMapTable *parseCommandLine(int argc, const char *argv[]) {
+#define SaveArg(keyName, errorMessageFunc)                                     \
+  if (argv[i + 1] == NULL) {                                                   \
+    errorMessageFunc;                                                          \
+  } else {                                                                     \
+    [cmds setObject:@(argv[i + 1]) forKey:@keyName];                           \
+    i++;                                                                       \
+  }
+  NSMapTable *cmds = [[NSMapTable alloc] init];
+
+  // Jumping the program in argv
+  for (int i = 1; i < argc; i++) {
+    if ((strcmp(argv[i], "-l") == 0) || (strcmp(argv[i], "--load") == 0)) {
+      SaveArg("LoadFilePath", errorMissingLoadFilePath());
+    } else if ((strcmp(argv[i], "-s") == 0) ||
+               (strcmp(argv[i], "--save") == 0)) {
+      SaveArg("SaveFilePath", errorMissingSaveFilePath());
+    } else if ((strcmp(argv[i], "-p") == 0) ||
+               (strcmp(argv[i], "--program") == 0)) {
+      SaveArg("ProgramFilePath", errorMissingProgramFilePath());
+    } else if ((strcmp(argv[i], "-d") == 0) ||
+               (strcmp(argv[i], "--dialect") == 0)) {
+      SaveArg("DialectFilePath", errorMissingDialectFilePath());
+    } else {
+      errorExtraArguments(argv[i]);
+    }
+  }
+
+  return cmds;
+}
+
 NSArray *padWords(NSMutableArray *words, NSUInteger desiredSize) {
   while ([words count] < desiredSize) {
     [words addObject:@((uint32_t)0)];
@@ -65,7 +143,6 @@ Word_Manager howManyWords(NSUInteger length) {
     .howManyWords = howManyWords,
   };
 }
-
 
 NSMutableArray *packString(NSString *string) {
   NSMutableArray *pack = [[NSMutableArray alloc] init];

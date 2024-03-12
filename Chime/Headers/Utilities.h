@@ -18,6 +18,12 @@ NSInteger packWord(OPCODE *opcodes);
 
 NSInteger packFullWord(NSArray *instructions, NSMapTable *keywords);
 
+NSMapTable *parseCommandLine(int argc, const char *argv[]);
+
+void errorMissingLoadFilePath();
+
+void errorMissingSaveFilePath();
+
 NSArray *padWords(NSMutableArray *words, NSUInteger desiredSize);
 
 Word_Manager howManyWords(NSUInteger length);
@@ -25,6 +31,5 @@ Word_Manager howManyWords(NSUInteger length);
 NSMutableArray *packString(NSString *string);
 
 NSString *unpackString(id startPointer, NSMutableArray *array);
-
 
 #endif /* Utilities_h */
