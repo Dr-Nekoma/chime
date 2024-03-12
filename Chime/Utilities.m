@@ -124,6 +124,7 @@ NSMapTable *parseCommandLine(int argc, const char *argv[]) {
   }
 
   return cmds;
+}
 
 NSArray *padWords(NSMutableArray *words, NSUInteger desiredSize) {
   while ([words count] < desiredSize) {
