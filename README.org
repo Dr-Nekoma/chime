@@ -1,16 +1,29 @@
 #+TITLE: Chime 🔔
 
-A runtime at your service.
+A runtime at your service. Chime is a hybrid Virtual Machine that first compiles a chime program
+into a sequece of words (32 bits each) and later on interprets it.
+
+It is Turing Complete. As for nice to haves, you have compile-time literals (integers), string support and
+syscalls (write and read from stdout).
 
 * Features
 
-- [ ] Stack manipulations
-- [ ] Flow control
-- [ ] Arithmetic and Logic
-- [ ] Address Management
-- [ ] Neutral instructions
-- [ ] Function calls and closures
+** Chime 1.0
+- [X] Stack manipulations
+- [X] Flow control
+- [X] Arithmetic and Logic
+- [X] Address Management
+- [X] Neutral instructions
+- [X] Function calls
+- [X] Strings  
+- [X] Syscalls
+- [ ] Rule 110  
+
+** Chime 2.0  
 - [ ] Translator between dialects
+- [ ] Closures
+- [ ] ROM
+- [ ] x86 Compilation (ROM is required)   
 
 * References
 
