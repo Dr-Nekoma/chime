@@ -25,6 +25,15 @@
 
   NSData *data = [[NSData alloc] initWithContentsOfFile:@(filepath)];
 
+  if (data.length == 0) {
+    @throw [NSException
+        exceptionWithName:@"Could not load Chime dialect"
+                   reason:[NSString
+                              stringWithFormat:@"Could not find file \"%@\"",
+                                               @(filepath)]
+                 userInfo:nil];
+  }
+
   if (data == nil) {
     NSLog(@"Could not read keywords from file \"%s\"", filepath);
   }
@@ -339,18 +348,32 @@ NSArray *cleanProgram(NSString *stringProgram) {
   return [trimmedProgram copy];
 }
 
-- (NSMutableArray *)ParseBytecode:(char *)filePath {
-  NSData *data = [[NSData alloc] initWithContentsOfFile:@(filePath)];
+- (NSMutableArray *)ParseBytecode:(char *)filepath {
+  NSData *data = [[NSData alloc] initWithContentsOfFile:@(filepath)];
+
+  if (data.length == 0) {
+    @throw [NSException
+        exceptionWithName:@"Could not load Chime bytecode"
+                   reason:[NSString
+                              stringWithFormat:@"Could not find file \"%@\"",
+                                               @(filepath)]
+                 userInfo:nil];
+  }
+
   return [NSKeyedUnarchiver unarchiveObjectWithData:data];
 }
 
-- (NSMutableArray *)ParseProgram:(char *)filePath
+- (NSMutableArray *)ParseProgram:(char *)filepath
                    usingKeywords:(char *)keywordsPath {
-  NSData *data = [[NSData alloc] initWithContentsOfFile:@(filePath)];
+  NSData *data = [[NSData alloc] initWithContentsOfFile:@(filepath)];
 
-  if (data == nil) {
-    NSLog(@"Could not read file \"%s\"", filePath);
-    return nil;
+  if (data.length == 0) {
+    @throw [NSException
+        exceptionWithName:@"Could not load Chime program"
+                   reason:[NSString
+                              stringWithFormat:@"Could not find file \"%@\"",
+                                               @(filepath)]
+                 userInfo:nil];
   }
 
   NSString *stringProgram =

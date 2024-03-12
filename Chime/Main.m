@@ -16,13 +16,22 @@ int main(int argc, const char *argv[]) {
 
     NSMutableString *candidateProgram = [[NSMutableString alloc] init];
     NSMutableString *candidateDialect = [[NSMutableString alloc] init];
-    handleProgramAndDialect(cmds, candidateProgram, candidateDialect);
+    [candidateProgram setString:[cmds objectForKey:@"ProgramFilePath"]];
+    [candidateDialect setString:[cmds objectForKey:@"DialectFilePath"]];
 
     NSString *candidateLoad = [cmds objectForKey:@"LoadFilePath"];
 
     if (candidateLoad != nil) {
       [vm LoadBytecode:candidateLoad];
     } else {
+      if ([candidateProgram length] == 0) {
+        errorMissingProgramFilePath();
+      }
+
+      if ([candidateDialect length] == 0) {
+        errorMissingDialectFilePath();
+      }
+
       [vm LoadProgram:[NSString stringWithString:candidateProgram]
           usingKeywords:[NSString stringWithString:candidateDialect]];
     }
@@ -30,9 +39,9 @@ int main(int argc, const char *argv[]) {
     NSString *candidateSave = [cmds objectForKey:@"SaveFilePath"];
     if (candidateSave != nil) {
       [vm SaveProgram:candidateSave];
+    } else {
+      [vm Evaluate];
     }
-
-    [vm Evaluate];
   }
   return 0;
 }

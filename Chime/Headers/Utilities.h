@@ -14,7 +14,8 @@ NSInteger packFullWord(NSArray *instructions, NSMapTable *keywords);
 
 NSMapTable *parseCommandLine(int argc, const char *argv[]);
 
-void handleProgramAndDialect(NSMapTable *cmds, NSString *candidateProgram,
-                             NSString *candidateDialect);
+void errorMissingLoadFilePath();
+
+void errorMissingSaveFilePath();
 
 #endif /* Utilities_h */

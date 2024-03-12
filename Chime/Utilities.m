@@ -50,18 +50,20 @@ NSInteger packFullWord(NSArray *instructions, NSMapTable *keywordsMap) {
 void errorMissingProgramFilePath() {
   @throw [NSException
       exceptionWithName:@"Missing program in command line"
-                 reason:[NSString stringWithFormat:
-                                      @"Expected the filepath of a program as "
-                                      @"the first argument in command line"]
+                 reason:[NSString
+                            stringWithFormat:
+                                @"Expected the filepath of a program alonside "
+                                @"the flag \"-p\" or \"--program\""]
                userInfo:nil];
 }
 
 void errorMissingDialectFilePath() {
   @throw [NSException
       exceptionWithName:@"Missing dialect set in command line"
-                 reason:[NSString stringWithFormat:
-                                      @"Expected the filepath of a dialect as "
-                                      @"the second argument in command line"]
+                 reason:[NSString
+                            stringWithFormat:
+                                @"Expected the filepath of a dialect alongside "
+                                @"the flag \"-d\" or \"--dialect\""]
                userInfo:nil];
 }
 
@@ -93,62 +95,32 @@ void errorExtraArguments(char *arg) {
 }
 
 NSMapTable *parseCommandLine(int argc, const char *argv[]) {
+#define SaveArg(keyName, errorMessageFunc)                                     \
+  if (argv[i + 1] == NULL) {                                                   \
+    errorMessageFunc;                                                          \
+  } else {                                                                     \
+    [cmds setObject:@(argv[i + 1]) forKey:@keyName];                           \
+    i++;                                                                       \
+  }
   NSMapTable *cmds = [[NSMapTable alloc] init];
 
   // Jumping the program in argv
-  BOOL programCaptured = NO;
   for (int i = 1; i < argc; i++) {
     if ((strcmp(argv[i], "-l") == 0) || (strcmp(argv[i], "--load") == 0)) {
-      if (argv[i + 1] == NULL) {
-        errorMissingLoadFilePath();
-      } else {
-        [cmds setObject:@(argv[i + 1]) forKey:@"LoadFilePath"];
-        i++;
-      }
+      SaveArg("LoadFilePath", errorMissingLoadFilePath());
     } else if ((strcmp(argv[i], "-s") == 0) ||
                (strcmp(argv[i], "--save") == 0)) {
-      if (argv[i + 1] == NULL) {
-        errorMissingSaveFilePath();
-      } else {
-        [cmds setObject:@(argv[i + 1]) forKey:@"SaveFilePath"];
-        i++;
-      }
+      SaveArg("SaveFilePath", errorMissingSaveFilePath());
+    } else if ((strcmp(argv[i], "-p") == 0) ||
+               (strcmp(argv[i], "--program") == 0)) {
+      SaveArg("ProgramFilePath", errorMissingProgramFilePath());
+    } else if ((strcmp(argv[i], "-d") == 0) ||
+               (strcmp(argv[i], "--dialect") == 0)) {
+      SaveArg("DialectFilePath", errorMissingDialectFilePath());
     } else {
-      if (([cmds objectForKey:@"ProgramFilePath"] != nil) &&
-          ([cmds objectForKey:@"DialectFilePath"] != nil)) {
-        errorExtraArguments(argv[i]);
-      } else {
-        if (!programCaptured) {
-          if (argv[i] == NULL) {
-            errorMissingProgramFilePath();
-          }
-          [cmds setObject:@(argv[i]) forKey:@"ProgramFilePath"];
-          programCaptured = YES;
-        } else {
-          if (argv[i] == NULL) {
-            errorMissingDialectFilePath();
-          }
-          [cmds setObject:@(argv[i]) forKey:@"DialectFilePath"];
-        }
-      }
+      errorExtraArguments(argv[i]);
     }
   }
 
   return cmds;
-}
-
-void handleProgramAndDialect(NSMapTable *cmds,
-                             NSMutableString *candidateProgram,
-                             NSMutableString *candidateDialect) {
-  [candidateProgram setString:[cmds objectForKey:@"ProgramFilePath"]];
-  if (candidateProgram == nil) {
-    errorMissingProgramFilePath();
-  }
-
-  [candidateDialect setString:[cmds objectForKey:@"DialectFilePath"]];
-  if (candidateDialect == nil) {
-    errorMissingDialectFilePath();
-  }
-
-  return;
 }
