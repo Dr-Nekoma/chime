@@ -1,0 +1,84 @@
+:main literal literal literal call literal literal
+&test
+#55
+#2
+&write-character
+&test
+*stdoutDevice
+literal syscall halt
+*writeSyscall
+
+>stdoutDevice #1
+>writeSyscall #1	
+>zerMask #16777215
+>fstMask #4278255615
+>sndMask #4294902015
+>thrMask #4294967040
+
+:masks *zerMask
+*fstMask
+*sndMask
+*thrMask
+
+:find-word /2 /2 literal plus ret
+#1
+
+:find-byte literal and ret
+#3
+
+:fix-endianness not literal plus ret
+#4
+
+:shift-byte-right /2 /2 /2 /2 /2 /2
+/2 /2 ret
+
+:shift-byte-left double double double double double double
+double double ret
+
+:minus-1 literal plus ret
+#-1
+
+:shift-left-end drop ret
+
+:shift-left dup jump-0 swap call swap call
+&shift-left-end
+&shift-byte-left
+&minus-1
+jump
+&shift-left
+
+:shift-right-end drop literal and ret
+#255
+
+:shift-right dup jump-0 swap call swap call
+&shift-right-end
+&shift-byte-right
+&minus-1
+jump
+&shift-right
+
+:find-character dup push-r call plus push-a load-a
+&find-word
+pop-r call call jump
+&find-byte
+&fix-endianness
+&shift-right
+
+:apply-mask push-r call call pop-r swap over
+&fix-endianness
+&shift-left
+not and push-r and pop-r or
+ret
+
+:write-character dup push-r call swap push-r plus 
+&find-word
+dup push-a load-a pop-r pop-r call
+&find-byte
+dup literal plus call swap push-a 
+&masks
+&apply-mask
+store-a ret
+
+:test "ABCDE"
+:universe "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+:next-universe "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"

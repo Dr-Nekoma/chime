@@ -188,6 +188,9 @@
     } else if ([opcode isEqualTo:@(OP_SYSCALL)]) {
       NSLog(@"SYSCALL");
       [self instructionSyscall];
+    } else if ([opcode isEqualTo:@(OP_SWAP)]) {
+      NSLog(@"SWAP");
+      [self instructionOpSwap];
     } else {
       NSLog(@"DEFAULT");
       return;
