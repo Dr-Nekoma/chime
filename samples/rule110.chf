@@ -1,11 +1,21 @@
-:main literal literal literal call literal literal
-&test
-#55
-#2
+:main call literal call call halt
+&set-newline
+&universe
+&write
+&print-newline
+
+:set-newline literal literal literal jump
+&new-line
+#10
+#0
 &write-character
-&test
+
+:print-newline literal jump
+&new-line
+&write
+
+:write literal literal syscall ret
 *stdoutDevice
-literal syscall halt
 *writeSyscall
 
 >stdoutDevice #1
@@ -74,11 +84,11 @@ ret
 &find-word
 dup push-a load-a pop-r pop-r call
 &find-byte
-dup literal plus call swap push-a 
+dup literal plus push-a load-a call 
 &masks
 &apply-mask
-store-a ret
+swap push-a store-a ret
 
-:test "ABCDE"
+:new-line "0"
 :universe "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
 :next-universe "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"

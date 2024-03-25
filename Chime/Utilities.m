@@ -86,7 +86,7 @@ void errorMissingSaveFilePath() {
                userInfo:nil];
 }
 
-void errorExtraArguments(char *arg) {
+void errorExtraArguments(const char *arg) {
   @throw [NSException
       exceptionWithName:@"Extra Arguments Provided"
                  reason:[NSString
@@ -178,7 +178,7 @@ uint32_t bigEndian(uint32_t word) {
   return *magic;
 }
 
-NSString *unpackString(id startPointer, NSMutableArray *array) {
+NSMutableData *unpackString(id startPointer, NSMutableArray *array) {
   NSUInteger counter = [startPointer integerValue];
   NSUInteger length = [[array objectAtIndex:counter] integerValue];
   counter++; // Jump length word;
@@ -194,8 +194,8 @@ NSString *unpackString(id startPointer, NSMutableArray *array) {
     
     NSUInteger bytesInTheWord = (i == wm.howManyWords - 1 && wm.trailingWord) ? wm.remainder : WORD_SIZE;
     
-    [data replaceBytesInRange:(NSMakeRange (byteCounter, byteCounter + bytesInTheWord))  withBytes:stringChunk];
+    [data replaceBytesInRange:(NSMakeRange (byteCounter, byteCounter + bytesInTheWord)) withBytes:stringChunk];
     byteCounter += WORD_SIZE;
   }
-  return [NSString stringWithUTF8String:[data bytes]];
+  return data;
 }
