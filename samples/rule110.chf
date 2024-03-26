@@ -1,16 +1,19 @@
-:main call literal call call halt
+:main call literal literal call halt
 &set-newline
-&universe
-&write
-&print-newline
+&universe-a
+&universe-b
+&rule110-loop
 
 :set-newline literal literal literal jump
 &new-line
-#10
+*new-line
 #0
 &write-character
 
-:print-newline literal jump
+:print-universe call drop ret 
+&write
+
+:print-newline literal call drop ret 
 &new-line
 &write
 
@@ -19,7 +22,11 @@
 *writeSyscall
 
 >stdoutDevice #1
->writeSyscall #1	
+>writeSyscall #1
+>zero #32
+>one #88
+>new-line #10
+>generations #128
 >zerMask #16777215
 >fstMask #4278255615
 >sndMask #4294902015
@@ -89,6 +96,101 @@ dup literal plus push-a load-a call
 &apply-mask
 swap push-a store-a ret
 
+:equal xor jump-0 literal ret
+&true
+#0
+
+:true literal ret
+#-1
+
+:check-zero literal jump
+*zero
+&equal
+
+:put-zero literal jump
+*zero
+&write-next
+
+:put-one literal jump
+*one
+&write-next
+
+:write-next push-r push-r over pop-r pop-r swap
+jump
+&write-character
+
+:mod-universe literal call and ret
+*universe-size
+&minus-1
+
+:left-neighbor call jump
+&minus-1
+&mod-universe
+
+:right-neighbor literal plus jump
+#1
+&mod-universe
+
+:is-zero dup push-r call over swap call
+&right-neighbor
+&find-character
+call pop-r swap jump-0 jump
+&check-zero
+&put-one
+&put-zero
+
+:push-zero literal ret
+*zero
+
+:provide-opposite call jump-0 literal ret 
+&check-zero
+&push-zero
+*one
+
+:reverse-char over over call call swap jump 
+&find-character
+&provide-opposite
+&write-character
+
+:is-one-stage-2 dup push-r call over pop-r jump
+&is-zero
+&reverse-char
+
+:is-one dup push-r call over swap
+&left-neighbor
+call call pop-r swap jump-0 jump
+&find-character
+&check-zero
+&is-one-stage-2
+&put-one
+
+:update-next-value dup push-r over swap call call
+&find-character
+&check-zero
+pop-r swap jump-0 jump
+&is-one
+&is-zero
+
+:update-universe literal 
+#0
+:update-universe-loop dup push-r call pop-r literal plus
+&update-next-value
+#1
+call dup jump+ drop swap jump
+&mod-universe
+&update-universe-loop
+&rule110-loop
+
+:rule110-loop dup call call literal push-a load-a
+&print-universe
+&print-newline
+&gen-counter
+call dup store-a jump+ halt
+&minus-1
+&update-universe
+
+:gen-counter *generations
 :new-line "0"
-:universe "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
-:next-universe "00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000"
+>universe-size #64
+:universe-a "                                                                "
+:universe-b "                                                               X"
