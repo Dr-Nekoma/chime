@@ -92,104 +92,106 @@
 }
 
 - (void)Evaluate {
-  while (true) {
+  while (YES) {
     id opcode = [self collectNextInstruction];
     if ([opcode isEqualTo:@(OP_HALT)]) {
-      NSLog(@"HALTING");
-      NSLog(@"%li", [[_dataStack peek] integerValue]);
-      // NSLog(@"RAM: %@", _memoryRAM);
+      LOG("HALTING");
+      // NSLog(@"%ld", [[_dataStack peek] integerValue]);
       return;
     } else if ([opcode isEqualTo:@(OP_PUSH_A)]) {
-      NSLog(@"PUSHING TO A");
+      LOG("PUSHING TO A");
       [self instructionOpPushA];
     } else if ([opcode isEqualTo:@(OP_POP_A)]) {
-      NSLog(@"POP TO A");
+      LOG("POP TO A");
       [self instructionOpPopA];
     } else if ([opcode isEqualTo:@(OP_PUSH_R)]) {
-      NSLog(@"PUSHING TO R");
+      LOG("PUSHING TO R");
       [self instructionOpPushR];
     } else if ([opcode isEqualTo:@(OP_POP_R)]) {
-      NSLog(@"POP R");
+      LOG("POP R");
       [self instructionOpPopR];
     } else if ([opcode isEqualTo:@(OP_DUP)]) {
-      NSLog(@"DUP");
+      LOG("DUP");
       [self instructionOpDup];
     } else if ([opcode isEqualTo:@(OP_DROP)]) {
-      NSLog(@"DROP");
+      LOG("DROP");
       [self instructionOpDrop];
     } else if ([opcode isEqualTo:@(OP_OVER)]) {
-      NSLog(@"OVER");
+      LOG("OVER");
       [self instructionOpOver];
     } else if ([opcode isEqualTo:@(OP_PC_FETCH)]) {
-      NSLog(@"PC FETCH");
+      LOG("PC FETCH");
       [self instructionOpPcFetch];
     } else if ([opcode isEqualTo:@(OP_JUMP)]) {
-      NSLog(@"JUMPING");
+      LOG("JUMPING");
       [self instructionOpJump];
     } else if ([opcode isEqualTo:@(OP_JUMP_ZERO)]) {
-      NSLog(@"JUMPING ZERO");
+      LOG("JUMPING ZERO");
       [self instructionOpJumpZero];
     } else if ([opcode isEqualTo:@(OP_JUMP_PLUS)]) {
-      NSLog(@"JUMPING PLUS");
+      LOG("JUMPING PLUS");
       [self instructionOpJumpPlus];
     } else if ([opcode isEqualTo:@(OP_CALL)]) {
-      NSLog(@"CALLING");
+      LOG("CALLING");
       [self instructionOpCall];
     } else if ([opcode isEqualTo:@(OP_RET)]) {
-      NSLog(@"RETURNING");
+      LOG("RETURNING");
       [self instructionOpRet];
     } else if ([opcode isEqualTo:@(OP_LITERAL)]) {
-      NSLog(@"FETCH LITERAL");
+      LOG("FETCH LITERAL");
       [self instructionOpLiteral];
     } else if ([opcode isEqualTo:@(OP_LOAD_A)]) {
-      NSLog(@"LOAD A");
+      LOG("LOAD A");
       [self instructionOpLoadA];
     } else if ([opcode isEqualTo:@(OP_STORE_A)]) {
-      NSLog(@"STORE A");
+      LOG("STORE A");
       [self instructionOpStoreA];
     } else if ([opcode isEqualTo:@(OP_AND)]) {
-      NSLog(@"AND");
+      LOG("AND");
       [self instructionOpAnd];
     } else if ([opcode isEqualTo:@(OP_OR)]) {
-      NSLog(@"OR");
+      LOG("OR");
       [self instructionOpOr];
     } else if ([opcode isEqualTo:@(OP_NOT)]) {
-      NSLog(@"NOT");
+      LOG("NOT");
       [self instructionOpNot];
     } else if ([opcode isEqualTo:@(OP_XOR)]) {
-      NSLog(@"XOR");
+      LOG("XOR");
       [self instructionOpXor];
     } else if ([opcode isEqualTo:@(OP_PLUS)]) {
-      NSLog(@"PLUS");
+      LOG("PLUS");
       [self instructionOpPlus];
     } else if ([opcode isEqualTo:@(OP_DOUBLE)]) {
-      NSLog(@"DOUBLE");
+      LOG("DOUBLE");
       [self instructionOpDouble];
     } else if ([opcode isEqualTo:@(OP_HALF)]) {
-      NSLog(@"HALF");
+      LOG("HALF");
       [self instructionOpHalf];
     } else if ([opcode isEqualTo:@(OP_PLUS_STAR)]) {
-      NSLog(@"PLUS STAR");
+      LOG("PLUS STAR");
       [self instructionOpPlusStar];
     } else if ([opcode isEqualTo:@(OP_LOAD_A_PLUS)]) {
-      NSLog(@"LOAD A PLUS");
+      LOG("LOAD A PLUS");
       [self instructionOpLoadAPlus];
     } else if ([opcode isEqualTo:@(OP_STORE_A_PLUS)]) {
-      NSLog(@"STORE A PLUS");
+      LOG("STORE A PLUS");
       [self instructionOpStoreAPlus];
     } else if ([opcode isEqualTo:@(OP_LOAD_R_PLUS)]) {
-      NSLog(@"LOAD R PLUS");
+      LOG("LOAD R PLUS");
       [self instructionOpLoadRPlus];
     } else if ([opcode isEqualTo:@(OP_STORE_R_PLUS)]) {
-      NSLog(@"STORE R PLUS");
+      LOG("STORE R PLUS");
       [self instructionOpStoreRPlus];
     } else if ([opcode isEqualTo:@(OP_NOP)]) {
-      NSLog(@"NOP");      
+      LOG("NOP");
     } else if ([opcode isEqualTo:@(OP_SYSCALL)]) {
-      NSLog(@"SYSCALL");
+      LOG("SYSCALL");
       [self instructionSyscall];
+    } else if ([opcode isEqualTo:@(OP_SWAP)]) {
+      LOG("SWAP");
+      [self instructionOpSwap];
     } else {
-      NSLog(@"DEFAULT");
+      LOG("DEFAULT");
       return;
     }
   }

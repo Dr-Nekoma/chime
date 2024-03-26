@@ -1,7 +1,7 @@
 #import <Foundation/Foundation.h>
 
-#include "Headers/Utilities.h"
 #include "Headers/Parser.h"
+#include "Headers/Utilities.h"
 
 bool findInEnumerator(NSEnumerator *enumerator, id target) {
   bool found = false;
@@ -86,7 +86,7 @@ void errorMissingSaveFilePath() {
                userInfo:nil];
 }
 
-void errorExtraArguments(char *arg) {
+void errorExtraArguments(const char *arg) {
   @throw [NSException
       exceptionWithName:@"Extra Arguments Provided"
                  reason:[NSString
@@ -137,10 +137,10 @@ Word_Manager howManyWords(NSUInteger length) {
   NSUInteger remainder = length % WORD_SIZE;
   NSUInteger trailingWord = remainder ? 1 : 0;
   NSUInteger howManyWords = (length / WORD_SIZE) + trailingWord;
-  return (Word_Manager) {
-    .remainder = remainder,
-    .trailingWord = trailingWord,
-    .howManyWords = howManyWords,
+  return (Word_Manager){
+      .remainder = remainder,
+      .trailingWord = trailingWord,
+      .howManyWords = howManyWords,
   };
 }
 
@@ -174,28 +174,33 @@ uint32_t bigEndian(uint32_t word) {
   bytes[2] = word >> 8;
   bytes[3] = word;
 
-  uint32_t *magic = (uint32_t*) bytes;
+  uint32_t *magic = (uint32_t *)bytes;
   return *magic;
 }
 
-NSString *unpackString(id startPointer, NSMutableArray *array) {
+NSMutableData *unpackString(id startPointer, NSMutableArray *array) {
   NSUInteger counter = [startPointer integerValue];
   NSUInteger length = [[array objectAtIndex:counter] integerValue];
   counter++; // Jump length word;
 
   Word_Manager wm = howManyWords(length);
   NSMutableData *data = [NSMutableData dataWithLength:length];
-  
+
   NSUInteger byteCounter = 0;
   for (int i = 0; i < wm.howManyWords; i++) {
-    // This is changing the endianness of the sequence of bytes in order for us to get an array of chars in the correct order
+    // This is changing the endianness of the sequence of bytes in order for us
+    // to get an array of chars in the correct order
     uint32_t bigEndianedChunk = bigEndian([array[i + counter] integerValue]);
-    char *stringChunk = (char *) &bigEndianedChunk;
-    
-    NSUInteger bytesInTheWord = (i == wm.howManyWords - 1 && wm.trailingWord) ? wm.remainder : WORD_SIZE;
-    
-    [data replaceBytesInRange:(NSMakeRange (byteCounter, byteCounter + bytesInTheWord))  withBytes:stringChunk];
+    char *stringChunk = (char *)&bigEndianedChunk;
+
+    NSUInteger bytesInTheWord = (i == wm.howManyWords - 1 && wm.trailingWord)
+                                    ? wm.remainder
+                                    : WORD_SIZE;
+
+    [data replaceBytesInRange:(NSMakeRange(byteCounter,
+                                           byteCounter + bytesInTheWord))
+                    withBytes:stringChunk];
     byteCounter += WORD_SIZE;
   }
-  return [NSString stringWithUTF8String:[data bytes]];
+  return data;
 }

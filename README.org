@@ -8,7 +8,7 @@ syscalls (write and read from stdout).
 
 * Features
 
-** Chime 1.0
+** Chime 1.0 [9/9]
 - [X] Stack manipulations
 - [X] Flow control
 - [X] Arithmetic and Logic
@@ -17,13 +17,38 @@ syscalls (write and read from stdout).
 - [X] Function calls
 - [X] Strings  
 - [X] Syscalls
-- [ ] Rule 110  
+- [X] Rule 110  
 
-** Chime 2.0  
+** Chime 2.0 [0/4]
 - [ ] Translator between dialects
 - [ ] Closures
 - [ ] ROM
 - [ ] x86 Compilation (ROM is required)   
+
+* How to use Chime
+
+** Nix
+
+#+begin_src shell
+  > just build
+  > ./result/bin/chime -p program.chf -d dialect
+#+end_src
+
+** Guix
+
+TODO
+
+** Developers
+
+- EduardoLR10
+- z-silver
+- MMagueta
+
+
+* Dr.Nekoma
+
+Built live on [[https://www.twitch.tv/drnekoma][Twitch]] and archived on [[https://youtube.com/playlist?list=PLafNlGaxdt67B-mwEPOnjEod-azc2sFqs&si=vJ6E_153zj7fheZW][Youtube]].
+
 
 * References
 
