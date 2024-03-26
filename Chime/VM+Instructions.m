@@ -287,7 +287,7 @@
 - (void)instructionOpSwap {
   @try {
     NSUInteger valueA = [[self.dataStack pop] integerValue];
-    NSUInteger valueB = [[self.dataStack pop] integerValue];    
+    NSUInteger valueB = [[self.dataStack pop] integerValue];
     [self.dataStack push:@(valueA)];
     [self.dataStack push:@(valueB)];
   } @catch (NSException *exception) {

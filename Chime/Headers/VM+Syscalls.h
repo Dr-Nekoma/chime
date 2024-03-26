@@ -8,7 +8,7 @@ typedef enum : uint64_t {
   SYSCALL_WRITE = 1,
   SYSCALL_OPEN = 2,
   SYSCALL_SEMGET = 64,
-  SYSCALL_SEMOP = 65,        
+  SYSCALL_SEMOP = 65,
   SYSCALL_SEMCTL = 66,
 } SYSCALL_OPCODE;
 

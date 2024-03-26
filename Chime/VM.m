@@ -183,7 +183,7 @@
       LOG("STORE R PLUS");
       [self instructionOpStoreRPlus];
     } else if ([opcode isEqualTo:@(OP_NOP)]) {
-      LOG("NOP");      
+      LOG("NOP");
     } else if ([opcode isEqualTo:@(OP_SYSCALL)]) {
       LOG("SYSCALL");
       [self instructionSyscall];

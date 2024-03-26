@@ -30,7 +30,6 @@ syscalls (write and read from stdout).
 ** Nix
 
 #+begin_src shell
-  > nix develop --impure
   > just build
   > ./result/bin/chime -p program.chf -d dialect
 #+end_src
