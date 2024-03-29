@@ -86,17 +86,17 @@ NSString *tokenAt(NSString *string, NSInteger index) {
 NSString *pureString(NSString *string, NSUInteger physicalLinesCounter) {
   NSRange firstQuotePosition = [string rangeOfString:@"\""];
   if (firstQuotePosition.location == NSNotFound) {
-        @throw [NSException
+    @throw [NSException
         exceptionWithName:@"Could not find beginning of String"
-                   reason:[NSString
-                              stringWithFormat:@"Could not find \" token to identify beginning of string in line %lu",
-                                               physicalLinesCounter]
+                   reason:[NSString stringWithFormat:
+                                        @"Could not find \" token to identify "
+                                        @"beginning of string in line %lu",
+                                        physicalLinesCounter]
                  userInfo:nil];
   } else {
     return [string substringFromIndex:firstQuotePosition.location];
   }
 }
-
 
 NSString *popFirstChar(NSString *string) {
   return [string substringFromIndex:1];
@@ -294,7 +294,8 @@ NSArray *popFirstToken(NSArray *stream) {
   } else if (isAddressLine(check)) {
     [self handleAddressLine:line fill:bytecodes];
   } else if (isChimeString(check)) {
-    [self handleStringLine:(pureString(line, _physicalLinesCounter)) fill:bytecodes];
+    [self handleStringLine:(pureString(line, _physicalLinesCounter))
+                      fill:bytecodes];
   } else {
     [self handleInstructions:labelInfo with:line fill:bytecodes];
   }

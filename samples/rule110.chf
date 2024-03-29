@@ -1,0 +1,196 @@
+:main call literal literal call halt
+&set-newline
+&universe-a
+&universe-b
+&rule110-loop
+
+:set-newline literal literal literal jump
+&new-line
+*new-line
+#0
+&write-character
+
+:print-universe call drop ret 
+&write
+
+:print-newline literal call drop ret 
+&new-line
+&write
+
+:write literal literal syscall ret
+*stdoutDevice
+*writeSyscall
+
+>stdoutDevice #1
+>writeSyscall #1
+>zero #32
+>one #88
+>new-line #10
+>generations #64
+>zerMask #16777215
+>fstMask #4278255615
+>sndMask #4294902015
+>thrMask #4294967040
+
+:masks *zerMask
+*fstMask
+*sndMask
+*thrMask
+
+:find-word /2 /2 literal plus ret
+#1
+
+:find-byte literal and ret
+#3
+
+:fix-endianness not literal plus ret
+#4
+
+:shift-byte-right /2 /2 /2 /2 /2 /2
+/2 /2 ret
+
+:shift-byte-left double double double double double double
+double double ret
+
+:minus-1 literal plus ret
+#-1
+
+:shift-left-end drop ret
+
+:shift-left dup jump-0 swap call swap call
+&shift-left-end
+&shift-byte-left
+&minus-1
+jump
+&shift-left
+
+:shift-right-end drop literal and ret
+#255
+
+:shift-right dup jump-0 swap call swap call
+&shift-right-end
+&shift-byte-right
+&minus-1
+jump
+&shift-right
+
+:find-character dup push-r call plus push-a load-a
+&find-word
+pop-r call call jump
+&find-byte
+&fix-endianness
+&shift-right
+
+:apply-mask push-r call call pop-r swap over
+&fix-endianness
+&shift-left
+not and push-r and pop-r or
+ret
+
+:write-character dup push-r call swap push-r plus 
+&find-word
+dup push-a load-a pop-r pop-r call
+&find-byte
+dup literal plus push-a load-a call 
+&masks
+&apply-mask
+swap push-a store-a ret
+
+:equal xor jump-0 literal ret
+&true
+#0
+
+:true literal ret
+#-1
+
+:check-zero literal jump
+*zero
+&equal
+
+:put-zero literal jump
+*zero
+&write-next
+
+:put-one literal jump
+*one
+&write-next
+
+:write-next push-r push-r over pop-r pop-r swap
+jump
+&write-character
+
+:mod-universe literal call and ret
+*universe-size
+&minus-1
+
+:left-neighbor call jump
+&minus-1
+&mod-universe
+
+:right-neighbor literal plus jump
+#1
+&mod-universe
+
+:is-zero dup push-r call over swap call
+&right-neighbor
+&find-character
+call pop-r swap jump-0 jump
+&check-zero
+&put-one
+&put-zero
+
+:push-zero literal ret
+*zero
+
+:provide-opposite call jump-0 literal ret 
+&check-zero
+&push-zero
+*one
+
+:reverse-char over over call call swap jump 
+&find-character
+&provide-opposite
+&write-character
+
+:is-one-stage-2 dup push-r call over pop-r jump
+&is-zero
+&reverse-char
+
+:is-one dup push-r call over swap
+&left-neighbor
+call call pop-r swap jump-0 jump
+&find-character
+&check-zero
+&is-one-stage-2
+&put-one
+
+:update-next-value dup push-r over swap call call
+&find-character
+&check-zero
+pop-r swap jump-0 jump
+&is-one
+&is-zero
+
+:update-universe literal 
+#0
+:update-universe-loop dup push-r call pop-r literal plus
+&update-next-value
+#1
+call dup jump+ drop swap jump
+&mod-universe
+&update-universe-loop
+&rule110-loop
+
+:rule110-loop dup call call literal push-a load-a
+&print-universe
+&print-newline
+&gen-counter
+call dup store-a jump+ halt
+&minus-1
+&update-universe
+
+:gen-counter *generations
+:new-line "0"
+>universe-size #64
+:universe-a "                                                                "
+:universe-b "                                                               X"

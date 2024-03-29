@@ -59,4 +59,6 @@
 
 - (void)instructionOpStoreRPlus;
 
+- (void)instructionOpSwap;
+
 @end
