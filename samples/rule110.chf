@@ -26,7 +26,7 @@
 >zero #32
 >one #88
 >new-line #10
->generations #128
+>generations #64
 >zerMask #16777215
 >fstMask #4278255615
 >sndMask #4294902015
